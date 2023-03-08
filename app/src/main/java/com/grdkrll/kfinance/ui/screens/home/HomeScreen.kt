@@ -13,7 +13,7 @@ fun HomeScreen(
 ) {
     val user = viewModel.getUser()
     if(user == null) {
-        viewModel.redirectToLogin()
+        viewModel.redirectToPreLogin()
         return
     }
     Column(

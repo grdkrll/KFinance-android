@@ -1,4 +1,4 @@
-package com.grdkrll.kfinance.ui.screens.login
+package com.grdkrll.kfinance.ui.screens.register
 
 import androidx.lifecycle.ViewModel
 import com.grdkrll.kfinance.NavDest
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val navigationDispatcher: NavigationDispatcher
 ) : ViewModel() {
     private val _email = MutableStateFlow(InputField())
@@ -18,6 +18,9 @@ class LoginViewModel @Inject constructor(
 
     private val _password = MutableStateFlow(InputField())
     val password: StateFlow<InputField> = _password
+
+    private val _passwordConfirm = MutableStateFlow(InputField())
+    val passwordConfirm: StateFlow<InputField> = _passwordConfirm
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
@@ -38,10 +41,19 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    fun onRedirectToRegisterClicked() {
+    fun onPasswordConfirmChanged(newPasswordValue: String) {
+        val passwordsMatch = (password.value.inputField == newPasswordValue)
+        _passwordConfirm.value = passwordConfirm.value.copy(
+            inputField = newPasswordValue,
+            isError = !passwordsMatch,
+            errorMessage = if(passwordsMatch) "" else "Passwords do not match"
+        )
+    }
+
+    fun onRedirectToLoginClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
-            navController.navigate(NavDest.REGISTER)
+            navController.navigate(NavDest.LOGIN)
         }
     }
 }

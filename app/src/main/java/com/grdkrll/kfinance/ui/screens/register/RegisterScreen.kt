@@ -1,4 +1,4 @@
-package com.grdkrll.kfinance.ui.screens.login
+package com.grdkrll.kfinance.ui.screens.register
 
 import EmailInputField
 import PasswordInputField
@@ -10,17 +10,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-@Composable
-fun LoginScreen(
-    viewModel: LoginViewModel
-) {
-    LoginBox(viewModel = viewModel)
 
+@Composable
+fun RegisterScreen(
+    viewModel: RegisterViewModel
+) {
+    RegisterBox(viewModel = viewModel)
 }
 
 @Composable
-fun LoginBox(
-    viewModel: LoginViewModel
+fun RegisterBox(
+    viewModel: RegisterViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -35,34 +35,23 @@ fun LoginBox(
             passwordField = viewModel.password,
             onPasswordChange = viewModel::onPasswordChanged
         )
-        LoginButton(viewModel)
-        Text("OR", modifier = Modifier.padding(16.dp))
+        PasswordInputField(
+            passwordField = viewModel.passwordConfirm,
+            onPasswordChange = viewModel::onPasswordConfirmChanged,
+            passwordLabel = "Confirm Password"
+        )
         RegisterButton(viewModel)
-    }
-}
-
-@Composable
-fun LoginButton(
-    viewModel: LoginViewModel
-) {
-    Button(
-        onClick = { /* TODO */ },
-        shape = MaterialTheme.shapes.extraSmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .padding(8.dp)
-    ) {
-        Text("Login")
+        Text("OR", modifier = Modifier.padding(16.dp))
+        LoginButton(viewModel)
     }
 }
 
 @Composable
 fun RegisterButton(
-    viewModel: LoginViewModel
+    viewModel: RegisterViewModel
 ) {
     Button(
-        onClick = viewModel::onRedirectToRegisterClicked,
+        onClick = { /*TODO*/ },
         shape = MaterialTheme.shapes.extraSmall,
         modifier = Modifier
             .fillMaxWidth()
@@ -70,5 +59,21 @@ fun RegisterButton(
             .padding(8.dp)
     ) {
         Text("Register")
+    }
+}
+
+@Composable
+fun LoginButton(
+    viewModel: RegisterViewModel
+) {
+    Button(
+        onClick = viewModel::onRedirectToLoginClicked,
+        shape = MaterialTheme.shapes.extraSmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp)
+            .padding(8.dp)
+    ) {
+        Text("Login")
     }
 }

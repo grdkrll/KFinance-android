@@ -2,5 +2,10 @@
     <string name="app_name">KFinance</string>
     <string name="title_activity_login_screen">LoginScreen</string>
     <string name="title_activity_register_screen">RegisterScreen</string>
-    <string name="login_email">Email Icon</string>
+    <string name="email_icon">Email Icon</string>
+    <string name="password_icon">Password Icon</string>
+    <string name="visibility_on_icon">Visibility On Icon</string>
+    <string name="visibility_off_icon">Visibility Off Icon</string>
+    <string name="pre_login_page_0_label">Stop wasting money</string>
+    <string name="pre_login_page_1_label">Start saving them instead</string>
 </resources>
