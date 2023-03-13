@@ -5,6 +5,7 @@ import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

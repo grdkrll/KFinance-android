@@ -38,7 +38,8 @@ fun ImageCarousel() {
     val currentPage = remember { mutableStateOf(0) }
     Column {
         HorizontalPager(
-            pageCount = 2
+            pageCount = 2,
+            modifier = Modifier.fillMaxHeight(0.8f)
         ) { page ->
             if (currentPage.value != page) {
                 currentPage.value = page
