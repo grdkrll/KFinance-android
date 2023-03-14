@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,14 +17,12 @@ import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
 import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var navigationDispatcher: NavigationDispatcher
+    private val navigationDispatcher by inject<NavigationDispatcher>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +59,12 @@ fun MainContent(
                 PreLoginScreen()
             }
             composable(NavDest.LOGIN) {
-                val viewModel = hiltViewModel<LoginViewModel>()
-                LoginScreen(viewModel = viewModel)
+                val viewModel = koinViewModel<LoginViewModel>()
+                LoginScreen(viewModel)
             }
             composable(NavDest.REGISTER) {
-                val viewModel = hiltViewModel<RegisterViewModel>()
-                RegisterScreen(viewModel = viewModel)
+                val viewModel = koinViewModel<RegisterViewModel>()
+                RegisterScreen(viewModel)
             }
             navigationDispatcher.navigationEmitter.observe(lifecycleOwner) { navigationCommand ->
                 navigationCommand.invoke(navController)

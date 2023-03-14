@@ -1,8 +1,7 @@
-package com.grdkrll.kfinance.repository.service.user.impl
+package com.grdkrll.kfinance.remote.service.user.impl
 
-import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.model.responce.user.UserResponce
-import com.grdkrll.kfinance.repository.service.user.UserService
+import com.grdkrll.kfinance.remote.service.user.UserService
 import io.ktor.client.*
 import io.ktor.client.request.*
 

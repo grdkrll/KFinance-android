@@ -1,6 +1,5 @@
-package com.grdkrll.kfinance.repository.service.user
+package com.grdkrll.kfinance.remote.service.user
 
-import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.model.responce.user.UserResponce
 
 interface UserService {

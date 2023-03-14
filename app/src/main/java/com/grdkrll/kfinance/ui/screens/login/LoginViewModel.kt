@@ -4,14 +4,10 @@ import androidx.lifecycle.ViewModel
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
-import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
-@HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginViewModel(
     private val navigationDispatcher: NavigationDispatcher
 ) : ViewModel() {
     private val _email = MutableStateFlow(InputField())
@@ -44,5 +40,9 @@ class LoginViewModel @Inject constructor(
             navController.popBackStack()
             navController.navigate(NavDest.REGISTER)
         }
+    }
+
+    private fun loginUser(email: String, password: String) {
+        _loading.value = true
     }
 }
