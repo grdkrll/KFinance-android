@@ -51,7 +51,7 @@ fun RegisterButton(
     viewModel: RegisterViewModel
 ) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = viewModel::onRegisterButtonClicked,
         shape = MaterialTheme.shapes.extraSmall,
         modifier = Modifier
             .fillMaxWidth()

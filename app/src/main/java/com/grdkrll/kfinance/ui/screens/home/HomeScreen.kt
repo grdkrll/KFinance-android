@@ -20,6 +20,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Good job")
+        Text(user.email)
+        Text(user.handle)
     }
 }

@@ -1,14 +1,18 @@
 package com.grdkrll.kfinance.ui.screens.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
+import com.grdkrll.kfinance.repository.user.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val navigationDispatcher: NavigationDispatcher
+    private val navigationDispatcher: NavigationDispatcher,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _email = MutableStateFlow(InputField())
     val email: StateFlow<InputField> = _email
@@ -35,6 +39,20 @@ class LoginViewModel(
         )
     }
 
+    fun onLoginButtonClicked() {
+        viewModelScope.launch {
+            val res = userRepository.loginUser(
+                email = email.value.inputField,
+                password = password.value.inputField
+            )
+            if(res.isSuccess) {
+                navigationDispatcher.dispatchNavigationCommand { navController ->
+                    navController.popBackStack()
+                    navController.navigate(NavDest.HOME)
+                }
+            }
+        }
+    }
     fun onRedirectToRegisterClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
@@ -42,7 +60,4 @@ class LoginViewModel(
         }
     }
 
-    private fun loginUser(email: String, password: String) {
-        _loading.value = true
-    }
 }

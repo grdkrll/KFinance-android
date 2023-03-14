@@ -46,7 +46,7 @@ fun LoginButton(
     viewModel: LoginViewModel
 ) {
     Button(
-        onClick = { /* TODO */ },
+        onClick = viewModel::onLoginButtonClicked,
         shape = MaterialTheme.shapes.extraSmall,
         modifier = Modifier
             .fillMaxWidth()

@@ -1,18 +1,19 @@
 package com.grdkrll.kfinance.ui.screens.register
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.repository.user.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val navigationDispatcher: NavigationDispatcher,
     private val userRepository: UserRepository
 ) : ViewModel() {
-
 
     private val _email = MutableStateFlow(InputField())
     val email: StateFlow<InputField> = _email
@@ -52,13 +53,20 @@ class RegisterViewModel(
         )
     }
 
-//    fun onRegisterButtonClicked() {
-//        runBlocking {
-//            launch {
-//                registerUser(email.value.inputField, password.value.inputField)
-//            }
-//        }
-//    }
+    fun onRegisterButtonClicked() {
+        viewModelScope.launch {
+            val res = userRepository.registerUser(
+                email = email.value.inputField,
+                password = password.value.inputField
+            )
+            if(res.isSuccess) {
+                navigationDispatcher.dispatchNavigationCommand { navController ->
+                    navController.popBackStack()
+                    navController.navigate(NavDest.HOME)
+                }
+            }
+        }
+    }
 
     fun onRedirectToLoginClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
@@ -66,19 +74,4 @@ class RegisterViewModel(
             navController.navigate(NavDest.LOGIN)
         }
     }
-
-//    private suspend fun registerUser(email: String, password: String) {
-//        _loading.value = true
-//        val res: UserResponce? = userService.registerUser(email, password)
-//        _loading.value = false
-//        if(res != null) {
-//            navigationDispatcher.dispatchNavigationCommand { navController ->
-//                navController.popBackStack()
-//                navController.navigate(NavDest.HOME)
-//            }
-//        } else {
-//            _email.value = this.email.value.copy(isError = true, errorMessage = "Wrong email or password")
-//        }
-//    }
-
 }

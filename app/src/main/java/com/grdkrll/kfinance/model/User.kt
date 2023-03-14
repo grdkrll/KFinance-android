@@ -1,4 +1,6 @@
 package com.grdkrll.kfinance.model
 
-class User {
-}
+class User(
+    val email: String,
+    val handle: String
+)

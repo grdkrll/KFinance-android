@@ -2,6 +2,7 @@ package com.grdkrll.kfinance.di
 
 import com.grdkrll.kfinance.remote.service.user.UserService
 import com.grdkrll.kfinance.remote.service.user.impl.UserServiceImpl
+import com.grdkrll.kfinance.repository.token.TokenRepository
 import com.grdkrll.kfinance.repository.user.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.screens.home.HomeViewModel
@@ -13,6 +14,7 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -31,7 +33,7 @@ val networkModule = module {
     single { UserServiceImpl(get()) } bind UserService::class
 }
 
-val nabigationDispatcherModule = module {
+val navigationDispatcherModule = module {
     single { NavigationDispatcher() }
 }
 
@@ -40,11 +42,11 @@ val registerViewModelModule = module {
 }
 
 val homeViewModelModule = module {
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 }
 
 val loginViewModelModule = module {
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
 }
 
 val preLoginViewModelModule = module {
@@ -52,5 +54,6 @@ val preLoginViewModelModule = module {
 }
 
 val appModule = module {
-    single { UserRepository(get()) }
-} + networkModule + nabigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule
+    single { TokenRepository(androidContext())}
+    single { UserRepository(get(), get(), androidContext()) }
+} + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule

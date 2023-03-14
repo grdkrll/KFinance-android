@@ -1,9 +1,9 @@
 package com.grdkrll.kfinance.remote.service.user
 
-import com.grdkrll.kfinance.model.responce.user.UserResponce
+import io.ktor.client.statement.*
 
 interface UserService {
-    suspend fun loginUser(email: String, password: String)
+    suspend fun loginUser(email: String, password: String): HttpResponse
 
-    suspend fun registerUser(email: String, password: String): UserResponce?
+    suspend fun registerUser(email: String, password: String): HttpResponse
 }
