@@ -8,4 +8,6 @@
     <string name="visibility_off_icon">Visibility Off Icon</string>
     <string name="pre_login_page_0_label">Stop wasting money</string>
     <string name="pre_login_page_1_label">Start saving them instead</string>
+    <string name="close_icon">Close Icon</string>
+    <string name="google_sign_in_button">Close Icon</string>
 </resources>

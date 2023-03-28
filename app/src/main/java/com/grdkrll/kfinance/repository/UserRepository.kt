@@ -1,4 +1,4 @@
-package com.grdkrll.kfinance.repository.user
+package com.grdkrll.kfinance.repository
 
 import android.content.Context
 import com.grdkrll.kfinance.R
@@ -7,7 +7,6 @@ import com.grdkrll.kfinance.model.dto.user.response.UserResponse
 import com.grdkrll.kfinance.model.exception.user.SignInException
 import com.grdkrll.kfinance.model.exception.user.SignUpException
 import com.grdkrll.kfinance.remote.service.user.UserService
-import com.grdkrll.kfinance.repository.token.TokenRepository
 import io.ktor.client.call.*
 
 
@@ -52,6 +51,17 @@ class UserRepository(
         return Result.failure(SignUpException("Sign-Up failed"))
     }
 
+    suspend fun loginWithGoogle(googleIdToken: String) : Result<UserResponse> {
+        return try {
+            val res = userService.loginWithGoogle(googleIdToken).body<UserResponse>()
+            tokenRepository.saveAuthToken(res.token)
+            saveUserData(res.email, res.handle)
+            Result.success(res)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
 
     private fun saveUserData(email: String, handle: String) {
         val editor = prefs.edit()

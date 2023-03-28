@@ -1,4 +1,4 @@
-package com.grdkrll.kfinance.repository.token
+package com.grdkrll.kfinance.repository
 
 import android.content.Context
 import com.grdkrll.kfinance.R

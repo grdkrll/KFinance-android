@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.grdkrll.kfinance.NavDest
+import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionScreen
 import com.grdkrll.kfinance.ui.screens.home.HomeScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
@@ -35,8 +36,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
+}
 
 @Composable
 fun MainContent(
@@ -44,7 +45,7 @@ fun MainContent(
     lifecycleOwner: LifecycleOwner
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
         val navController = rememberNavController()
 
@@ -65,6 +66,9 @@ fun MainContent(
             composable(NavDest.REGISTER) {
                 val viewModel = koinViewModel<RegisterViewModel>()
                 RegisterScreen(viewModel)
+            }
+            composable(NavDest.ADD_TRANSACTION) {
+                AddTransactionScreen()
             }
             navigationDispatcher.navigationEmitter.observe(lifecycleOwner) { navigationCommand ->
                 navigationCommand.invoke(navController)

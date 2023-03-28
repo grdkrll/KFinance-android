@@ -5,3 +5,9 @@ data class InputField (
     var isError: Boolean = false,
     var errorMessage: String = ""
 )
+
+data class SumInputField (
+    var inputField: Double = 0.0,
+    var isError: Boolean = false,
+    var errorMessage: String = ""
+)

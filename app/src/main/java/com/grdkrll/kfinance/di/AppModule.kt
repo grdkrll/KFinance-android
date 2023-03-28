@@ -1,10 +1,16 @@
 package com.grdkrll.kfinance.di
 
+import androidx.room.Room
+import com.grdkrll.kfinance.model.database.TransactionDatabase
+import com.grdkrll.kfinance.remote.service.transaction.TransactionService
+import com.grdkrll.kfinance.remote.service.transaction.impl.TransactionServiceImpl
 import com.grdkrll.kfinance.remote.service.user.UserService
 import com.grdkrll.kfinance.remote.service.user.impl.UserServiceImpl
-import com.grdkrll.kfinance.repository.token.TokenRepository
-import com.grdkrll.kfinance.repository.user.UserRepository
+import com.grdkrll.kfinance.repository.TransactionRepository
+import com.grdkrll.kfinance.repository.TokenRepository
+import com.grdkrll.kfinance.repository.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
+import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionViewModel
 import com.grdkrll.kfinance.ui.screens.home.HomeViewModel
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
 import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginViewModel
@@ -31,6 +37,11 @@ val networkModule = module {
         }
     }
     single { UserServiceImpl(get()) } bind UserService::class
+    single { TransactionServiceImpl(get()) } bind TransactionService::class
+}
+
+val transactionDatabaseModule = module {
+    single { Room.databaseBuilder(get(), TransactionDatabase::class.java, "KFinanceDatabase").build() }
 }
 
 val navigationDispatcherModule = module {
@@ -42,18 +53,25 @@ val registerViewModelModule = module {
 }
 
 val homeViewModelModule = module {
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get()) }
 }
 
 val loginViewModelModule = module {
-    viewModel { LoginViewModel(get(), get()) }
+
+    viewModel {
+        LoginViewModel(get(), get()) }
 }
 
 val preLoginViewModelModule = module {
     viewModel { PreLoginViewModel(get()) }
 }
 
+val addTransactionViewModel = module {
+    viewModel { AddTransactionViewModel(get(), get()) }
+}
+
 val appModule = module {
-    single { TokenRepository(androidContext())}
+    single { TokenRepository(androidContext()) }
     single { UserRepository(get(), get(), androidContext()) }
-} + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule
+    single { TransactionRepository(get(), get(), get()) }
+} + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule + addTransactionViewModel + transactionDatabaseModule

@@ -3,7 +3,7 @@ package com.grdkrll.kfinance.ui.screens.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
-import com.grdkrll.kfinance.repository.user.UserRepository
+import com.grdkrll.kfinance.repository.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.MutableStateFlow

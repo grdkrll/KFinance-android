@@ -1,5 +1,7 @@
 package com.grdkrll.kfinance.remote.service.user.impl
 
+import com.grdkrll.kfinance.SERVICE_BASE_URL
+import com.grdkrll.kfinance.model.dto.user.request.GoogleLoginRequest
 import com.grdkrll.kfinance.model.dto.user.request.UserLoginRequest
 import com.grdkrll.kfinance.model.dto.user.request.UserRegisterRequest
 import com.grdkrll.kfinance.remote.service.user.UserService
@@ -11,7 +13,7 @@ class UserServiceImpl (
     private val client: HttpClient
 ) : UserService {
     companion object {
-        private const val BASE_URL = "http://angry-clouds-cheat-194-186-53-186.loca.lt"
+        private const val BASE_URL = SERVICE_BASE_URL
     }
 
     override suspend fun loginUser(email: String, password: String) = client.post("$BASE_URL/u/sign_in") {
@@ -22,5 +24,10 @@ class UserServiceImpl (
     override suspend fun registerUser(email: String, password: String) = client.post("$BASE_URL/u/sign_up") {
         contentType(ContentType.Application.Json)
         setBody(UserRegisterRequest(email, email, password))
+    }
+
+    override suspend fun loginWithGoogle(googleIdToken: String) = client.post("$BASE_URL/u/google_sign_in") {
+        contentType(ContentType.Application.Json)
+        setBody(GoogleLoginRequest(googleIdToken))
     }
 }
