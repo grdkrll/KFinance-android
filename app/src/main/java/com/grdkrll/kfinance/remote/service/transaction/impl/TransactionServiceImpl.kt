@@ -1,5 +1,6 @@
 package com.grdkrll.kfinance.remote.service.transaction.impl
 
+import android.util.Log
 import com.grdkrll.kfinance.SERVICE_BASE_URL
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
 import com.grdkrll.kfinance.remote.service.transaction.TransactionService
@@ -17,6 +18,7 @@ class TransactionServiceImpl(
 
     override suspend fun addTransaction(transaction: TransactionRequest, token: String?) = client.post("$BASE_URL/t/add_transaction") {
         header(AuthScheme.Bearer, token)
+        Log.d("Transaction Service", token ?: "null")
         contentType(ContentType.Application.Json)
         setBody(transaction)
     }

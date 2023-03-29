@@ -1,5 +1,6 @@
 package com.grdkrll.kfinance.repository
 
+import android.util.Log
 import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.database.TransactionDatabase
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
@@ -55,6 +56,7 @@ class TransactionRepository(
 
     suspend fun addTransaction(transactionRequest: TransactionRequest) : Result<TransactionResponse> {
         return try {
+            Log.d("Transaction Repository", tokenRepository.fetchAuthToken() ?: "null")
             val res = transactionService.addTransaction(transactionRequest, tokenRepository.fetchAuthToken()).body<TransactionResponse>()
             database.getTransactionDao().addTransaction(
                 TransactionEntity(

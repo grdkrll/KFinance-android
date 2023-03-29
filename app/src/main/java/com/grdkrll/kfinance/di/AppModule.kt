@@ -1,5 +1,6 @@
 package com.grdkrll.kfinance.di
 
+
 import androidx.room.Room
 import com.grdkrll.kfinance.model.database.TransactionDatabase
 import com.grdkrll.kfinance.remote.service.transaction.TransactionService
@@ -17,6 +18,8 @@ import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginViewModel
 import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -28,6 +31,14 @@ import org.koin.dsl.module
 val networkModule = module {
     single {
         HttpClient(Android) {
+            install(Auth) {
+                bearer {
+                    val tokenRepository: TokenRepository = get()
+                    loadTokens {
+                        BearerTokens(tokenRepository.fetchAuthToken() ?: "", "")
+                    }
+                }
+            }
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true

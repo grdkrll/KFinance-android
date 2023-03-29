@@ -29,43 +29,73 @@ fun AddTransactionScreen(
 fun TransactionBox(
     viewModel: AddTransactionViewModel
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CloseButton(viewModel::onCloseButtonClicked)
-        CategoryField(
-            viewModel::onCategoryChanged
-        )
+    Scaffold(
+        topBar = { CloseButton(viewModel::onCloseButtonClicked)},
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CategoryField(
+                    viewModel.category,
+                    viewModel::onCategoryChanged
+                )
 
-        SumField(
-            viewModel.sum,
-            viewModel::onSumChanged
-        )
+                SumField(
+                    viewModel.sum,
+                    viewModel::onSumChanged
+                )
 
-        AddTransactionButton(viewModel::onAddTransactionButtonClicked)
+                AddTransactionButton(viewModel::onAddTransactionButtonClicked)
 
-    }
+            }
+        })
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun CategoryField(
+    categoryFlow: StateFlow<String>,
     onCategoryChanged: (String) -> Unit
 ) {
-    val expanded = remember { mutableStateOf(true) }
-    DropdownMenu(
-        expanded = expanded.value,
-        onDismissRequest = { expanded.value = false }
+    val category = categoryFlow.collectAsState()
+    var expanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = {
+            expanded = !expanded
+        }
     ) {
-        TransactionCategory.values().forEachIndexed { index, transactionCategory ->
-            DropdownMenuItem(
-                text = { Text(transactionCategory.name) },
-                onClick = {
-                    onCategoryChanged(transactionCategory.name)
-                    expanded.value = false
-                }
-            )
+        TextField(
+            readOnly = true,
+            value = category.value,
+            onValueChange = { },
+            label = { Text("Label") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
+            TransactionCategory.values().forEachIndexed { index, transactionCategory ->
+                DropdownMenuItem(
+                    text = { Text(transactionCategory.name) },
+                    onClick = {
+                        onCategoryChanged(transactionCategory.name)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }
