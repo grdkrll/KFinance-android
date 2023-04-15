@@ -11,11 +11,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.grdkrll.kfinance.NavDest
+import com.grdkrll.kfinance.ui.screens.add_group.AddGroupScreen
 import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionScreen
+import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupScreen
+import com.grdkrll.kfinance.ui.screens.groups.GroupsList
 import com.grdkrll.kfinance.ui.screens.home.HomeScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
 import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginScreen
+import com.grdkrll.kfinance.ui.screens.profile.ProfileScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
 import org.koin.android.ext.android.inject
@@ -69,6 +73,18 @@ fun MainContent(
             }
             composable(NavDest.ADD_TRANSACTION) {
                 AddTransactionScreen()
+            }
+            composable(NavDest.GROUPS_LIST) {
+                GroupsList()
+            }
+            composable(NavDest.PROFILE) {
+                ProfileScreen()
+            }
+            composable(NavDest.ADD_GROUP) {
+                AddGroupScreen()
+            }
+            composable(NavDest.CREATE_GROUP) {
+                CreateGroupScreen()
             }
             navigationDispatcher.navigationEmitter.observe(lifecycleOwner) { navigationCommand ->
                 navigationCommand.invoke(navController)

@@ -10,6 +10,14 @@ object NavDest {
     const val REGISTER = "register"
 
     const val ADD_TRANSACTION = "add_transaction"
+
+    const val GROUPS_LIST = "groups_list"
+
+    const val PROFILE = "profile"
+
+    const val ADD_GROUP = "add_group"
+
+    const val CREATE_GROUP = "create_group"
 }
 
 
@@ -29,6 +37,7 @@ enum class TransactionCategory {
     SAVINGS,
     DONATIONS,
     ENTERTAINMENT,
+
     // income
     SALARY,
     GIFTS,
@@ -36,4 +45,4 @@ enum class TransactionCategory {
     ALL
 }
 
-const val SERVICE_BASE_URL = "http://slimy-clowns-punch-194-186-53-186.loca.lt"
+const val SERVICE_BASE_URL = "http://dry-geckos-work-85-143-112-40.loca.lt"

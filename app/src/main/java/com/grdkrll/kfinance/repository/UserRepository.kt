@@ -6,7 +6,7 @@ import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.model.dto.user.response.UserResponse
 import com.grdkrll.kfinance.model.exception.user.SignInException
 import com.grdkrll.kfinance.model.exception.user.SignUpException
-import com.grdkrll.kfinance.remote.service.user.UserService
+import com.grdkrll.kfinance.service.user.UserService
 import io.ktor.client.call.*
 
 
@@ -61,6 +61,18 @@ class UserRepository(
             e.printStackTrace()
             Result.failure(e)
         }
+    }
+
+    suspend fun changeUserData(handle: String, email: String, password: String, confirmPassword: String): Result<UserResponse> {
+        try {
+            val res = userService.changeUserData(handle, email, password, confirmPassword, tokenRepository.fetchAuthToken()).body<UserResponse>()
+            tokenRepository.saveAuthToken(res.token)
+            saveUserData(res.email, res.handle)
+            return Result.success(res)
+        } catch(e: Exception) {
+            e.printStackTrace()
+        }
+        return Result.failure(SignInException("Data change failed"))
     }
 
     private fun saveUserData(email: String, handle: String) {

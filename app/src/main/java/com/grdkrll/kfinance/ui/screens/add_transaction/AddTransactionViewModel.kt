@@ -7,10 +7,14 @@ import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
 import com.grdkrll.kfinance.repository.TransactionRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
-import com.grdkrll.kfinance.ui.components.input_fields.SumInputField
+import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
+data class CategoryInputField(
+    val category: TransactionCategory
+)
 
 class AddTransactionViewModel(
     private val navigationDispatcher: NavigationDispatcher,
@@ -18,19 +22,24 @@ class AddTransactionViewModel(
 ) : ViewModel() {
     private val _type = MutableStateFlow(false)
 
-    private var _category = MutableStateFlow("")
-    val category: StateFlow<String> = _category
+    private var _category = MutableStateFlow(CategoryInputField(TransactionCategory.FOOD))
+    val category: StateFlow<CategoryInputField> = _category
 
-    private val _sum = MutableStateFlow(SumInputField())
-    val sum: StateFlow<SumInputField> = _sum
+    private val _sum = MutableStateFlow(InputField())
+    val sum: StateFlow<InputField> = _sum
 
     fun onCategoryChanged(newCategoryValue: String) {
-        _category.value = newCategoryValue
+        _category.value =
+            category.value.copy(category = TransactionCategory.valueOf(newCategoryValue))
     }
 
     fun onSumChanged(newSumValue: String) {
-
-        _sum.value = sum.value.copy(inputField = newSumValue.toDouble(), isError = false, errorMessage = "")
+        if (newSumValue.toDoubleOrNull() != null) {
+            _sum.value =
+                sum.value.copy(inputField = newSumValue, isError = false, errorMessage = "")
+        } else {
+            _sum.value = sum.value.copy(isError = true, errorMessage = "Sum should be a number")
+        }
     }
 
     fun onAddTransactionButtonClicked() {
@@ -38,11 +47,11 @@ class AddTransactionViewModel(
             val res = transactionRepository.addTransaction(
                 TransactionRequest(
                     false,
-                    TransactionCategory.SALARY,
-                    sum.value.inputField
+                    category.value.category,
+                    sum.value.inputField.toDouble()
                 )
             )
-            if(res.isSuccess) {
+            if (res.isSuccess) {
                 navigationDispatcher.dispatchNavigationCommand { navController ->
                     navController.popBackStack()
                     navController.navigate(NavDest.HOME)
@@ -54,7 +63,6 @@ class AddTransactionViewModel(
     fun onCloseButtonClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
-            navController.navigate(NavDest.HOME)
         }
     }
 }

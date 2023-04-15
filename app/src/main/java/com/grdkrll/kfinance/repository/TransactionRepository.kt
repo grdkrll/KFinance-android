@@ -1,20 +1,18 @@
 package com.grdkrll.kfinance.repository
 
-import android.util.Log
 import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.database.TransactionDatabase
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
 import com.grdkrll.kfinance.model.dto.transaction.response.TransactionPage
 import com.grdkrll.kfinance.model.dto.transaction.response.TransactionResponse
 import com.grdkrll.kfinance.model.table.TransactionEntity
-import com.grdkrll.kfinance.remote.service.transaction.TransactionService
+import com.grdkrll.kfinance.service.transaction.TransactionService
 import io.ktor.client.call.*
 
 class TransactionRepository(
     private val transactionService: TransactionService,
     private val tokenRepository: TokenRepository,
     private val database: TransactionDatabase
-
 ) {
     suspend fun getTransactions(page: Int = 0): Result<TransactionPage> {
         try {
@@ -54,10 +52,12 @@ class TransactionRepository(
         }
     }
 
-    suspend fun addTransaction(transactionRequest: TransactionRequest) : Result<TransactionResponse> {
+    suspend fun addTransaction(transactionRequest: TransactionRequest): Result<TransactionResponse> {
         return try {
-            Log.d("Transaction Repository", tokenRepository.fetchAuthToken() ?: "null")
-            val res = transactionService.addTransaction(transactionRequest, tokenRepository.fetchAuthToken()).body<TransactionResponse>()
+            val res = transactionService.addTransaction(
+                transactionRequest,
+                tokenRepository.fetchAuthToken()
+            ).body<TransactionResponse>()
             database.getTransactionDao().addTransaction(
                 TransactionEntity(
                     res.id,

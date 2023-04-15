@@ -2,20 +2,17 @@ package com.grdkrll.kfinance.ui.screens.add_transaction
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.StateFlow
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.grdkrll.kfinance.R
 import com.grdkrll.kfinance.TransactionCategory
-import com.grdkrll.kfinance.ui.components.input_fields.SumInputField
+import com.grdkrll.kfinance.ui.components.buttons.CloseButton
+import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,14 +27,14 @@ fun TransactionBox(
     viewModel: AddTransactionViewModel
 ) {
     Scaffold(
-        topBar = { CloseButton(viewModel::onCloseButtonClicked)},
+        topBar = { CloseButton(viewModel::onCloseButtonClicked) },
         content = { paddingValues ->
             Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(paddingValues)
             ) {
                 CategoryField(
                     viewModel.category,
@@ -58,10 +55,10 @@ fun TransactionBox(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CategoryField(
-    categoryFlow: StateFlow<String>,
+    categoryState: StateFlow<CategoryInputField>,
     onCategoryChanged: (String) -> Unit
 ) {
-    val category = categoryFlow.collectAsState()
+    val category = categoryState.collectAsState()
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -71,15 +68,16 @@ fun CategoryField(
     ) {
         TextField(
             readOnly = true,
-            value = category.value,
+            value = category.value.category.name,
             onValueChange = { },
-            label = { Text("Label") },
+            label = { Text("Category") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier.menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -87,7 +85,7 @@ fun CategoryField(
                 expanded = false
             }
         ) {
-            TransactionCategory.values().forEachIndexed { index, transactionCategory ->
+            TransactionCategory.values().forEach { transactionCategory ->
                 DropdownMenuItem(
                     text = { Text(transactionCategory.name) },
                     onClick = {
@@ -102,33 +100,19 @@ fun CategoryField(
 
 @Composable
 fun SumField(
-    sumInputField: StateFlow<SumInputField>,
+    sumInputField: StateFlow<InputField>,
     onSumChange: (String) -> Unit
 ) {
     val sum = sumInputField.collectAsState()
     OutlinedTextField(
         label = { Text("Total sum") },
-        value = sum.value.inputField.toString(),
+        value = sum.value.inputField,
         onValueChange = onSumChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal,
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next
         )
     )
-}
-
-@Composable
-fun CloseButton(
-    onClick: () -> Unit
-) {
-    IconButton(
-        onClick = onClick
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Close,
-            contentDescription = stringResource(id = R.string.close_icon)
-        )
-    }
 }
 
 @Composable
