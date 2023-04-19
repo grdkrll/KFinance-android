@@ -10,8 +10,16 @@ import org.koin.core.component.getScopeId
 class GroupRepository(
     private val groupsService: GroupsService,
     private val tokenRepository: TokenRepository,
-    private val database: GroupsDatabase
+    private val database: GroupsDatabase,
+    private val selectedGroupRepository: SelectedGroupRepository
 ) {
+
+
+    fun selectGroup(id: Int, name: String) = selectedGroupRepository.saveGroup(id, name)
+
+    fun deselectGroup() = selectedGroupRepository.deselectGroup()
+    fun fetchGroup() = selectedGroupRepository.fetchGroup()
+
     suspend fun createGroup(name: String, handle: String, password: String): Result<GroupResponse> {
         return try {
             val res = groupsService.createGroup(
@@ -55,7 +63,8 @@ class GroupRepository(
 
     suspend fun getAllGroupsOfUser(): Result<List<GroupResponse>> {
         return try {
-            val res = groupsService.getAllGroupsOfUser(tokenRepository.fetchAuthToken()).body<List<GroupResponse>>()
+            val res = groupsService.getAllGroupsOfUser(tokenRepository.fetchAuthToken())
+                .body<List<GroupResponse>>()
             Result.success(res)
         } catch (e: Exception) {
             e.printStackTrace()

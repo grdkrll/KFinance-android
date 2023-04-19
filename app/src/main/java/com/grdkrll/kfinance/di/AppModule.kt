@@ -15,7 +15,7 @@ import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.screens.add_group.AddGroupViewModel
 import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionViewModel
 import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupViewModel
-import com.grdkrll.kfinance.ui.screens.groups.GroupsListViewModel
+import com.grdkrll.kfinance.ui.screens.groups_list.GroupsListViewModel
 import com.grdkrll.kfinance.ui.screens.home.HomeViewModel
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
 import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginViewModel
@@ -79,7 +79,7 @@ val registerViewModelModule = module {
 }
 
 val homeViewModelModule = module {
-    viewModel { HomeViewModel(get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
 }
 
 val loginViewModelModule = module {
@@ -94,10 +94,10 @@ val preLoginViewModelModule = module {
 }
 
 val addTransactionViewModel = module {
-    viewModel { AddTransactionViewModel(get(), get()) }
+    viewModel { AddTransactionViewModel(get(), get(), get(), get()) }
 }
 val groupsListViewModel = module {
-    viewModel { GroupsListViewModel(get(), get()) }
+    viewModel { GroupsListViewModel(get(), get(), get()) }
 }
 
 val profileScreenViewModelModule = module {
@@ -114,8 +114,9 @@ val createGroupViewModelModule = module {
 
 val appModule = module {
     single { TokenRepository(androidContext()) }
-    single { UserRepository(get(), get(), androidContext()) }
-    single { TransactionRepository(get(), get(), get()) }
+    single { UserRepository(get(), get(), androidContext(), get()) }
+    single { TransactionRepository(get(), get(), get(), get()) }
     single { SortRepository(androidContext()) }
-    single { GroupRepository(get(), get(), get()) }
+    single { GroupRepository(get(), get(), get(), get()) }
+    single { SelectedGroupRepository(androidContext()) }
 } + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule + addTransactionViewModel + transactionDatabaseModule + groupsListViewModel + profileScreenViewModelModule + addGroupViewModelModule + createGroupViewModelModule + groupsDatabaseModule

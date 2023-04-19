@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import com.grdkrll.kfinance.repository.SortType
+import com.grdkrll.kfinance.ui.components.buttons.CloseButton
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
@@ -25,11 +26,12 @@ import java.util.*
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val user = viewModel.getUser()
-    if (user == null) {
+    val userGroup = viewModel.getUser()
+    if (userGroup == null) {
         viewModel.redirectToPreLogin()
         return
     }
+    val (user, group) = userGroup
     viewModel.fetchTransactions()
     Scaffold(
         bottomBar = {
@@ -47,8 +49,12 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                Text(user.email)
-                Text(user.handle)
+                if (group.id == -1) {
+                    Text(user.email)
+                    Text(user.handle)
+                } else {
+                    SelectedGroupCard(group.name, viewModel::onDeselectGroupButtonClicked)
+                }
                 SortField(viewModel.sortType, viewModel::onSortTypeChanged)
                 TransactionList(viewModel.response)
             }
@@ -116,6 +122,7 @@ fun TransactionList(
                 }
             }
         }
+
         is TransactionState.Loading -> {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -125,6 +132,7 @@ fun TransactionList(
                 CircularProgressIndicator()
             }
         }
+
         else -> {
             Text("Something went wrong")
         }
@@ -190,6 +198,30 @@ fun SortField(
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun SelectedGroupCard(
+    name: String,
+    onDeselectGroup: () -> Unit
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
+        shape = MaterialTheme.shapes.extraSmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp)
+            .padding(8.dp)
+    ) {
+        Row {
+            Text(name)
+            Spacer(modifier = Modifier.weight(1f))
+            CloseButton(onDeselectGroup)
         }
     }
 }

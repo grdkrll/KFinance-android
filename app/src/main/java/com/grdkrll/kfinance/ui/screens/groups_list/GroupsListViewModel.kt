@@ -1,4 +1,4 @@
-package com.grdkrll.kfinance.ui.screens.groups
+package com.grdkrll.kfinance.ui.screens.groups_list
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -6,16 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.repository.GroupRepository
+import com.grdkrll.kfinance.repository.SelectedGroupRepository
 import com.grdkrll.kfinance.sealed.GroupsState
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import kotlinx.coroutines.launch
 
 class GroupsListViewModel(
     private val groupRepository: GroupRepository,
-    private val navigationDispatcher: NavigationDispatcher
+    private val navigationDispatcher: NavigationDispatcher,
+    private val selectedGroupRepository: SelectedGroupRepository
 ) : ViewModel() {
 
     val response: MutableState<GroupsState> = mutableStateOf(GroupsState.Empty)
+
+    fun onSelectGroupClicked(groupId: Int, groupName: String) {
+        selectedGroupRepository.saveGroup(groupId, groupName)
+        redirectToHome()
+    }
 
     fun onAddGroupButtonClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->

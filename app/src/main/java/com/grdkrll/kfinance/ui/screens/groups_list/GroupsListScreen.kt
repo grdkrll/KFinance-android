@@ -1,5 +1,6 @@
-package com.grdkrll.kfinance.ui.screens.groups
+package com.grdkrll.kfinance.ui.screens.groups_list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomNavigation
@@ -42,7 +43,7 @@ fun GroupsList(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 Text("Groups")
-                GroupsListList(response = viewModel.response)
+                GroupsListList(response = viewModel.response, viewModel::onSelectGroupClicked)
             }
         }
     )
@@ -98,16 +99,18 @@ fun AddGroupButton(
 
 @Composable
 fun GroupsListList(
-    response: MutableState<GroupsState>
+    response: MutableState<GroupsState>,
+    onSelectGroupClicked: (Int, String) -> Unit
 ) {
     when (val result = response.value) {
         is GroupsState.Success -> {
             LazyColumn {
                 items(result.data) { group ->
-                    GroupCard(group)
+                    GroupCard(group, onSelectGroupClicked)
                 }
             }
         }
+
         is GroupsState.Loading -> {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -117,6 +120,7 @@ fun GroupsListList(
                 CircularProgressIndicator()
             }
         }
+
         else -> {
             Text("Something went wrong")
         }
@@ -124,12 +128,13 @@ fun GroupsListList(
 }
 
 @Composable
-fun GroupCard(group: GroupResponse) {
+fun GroupCard(group: GroupResponse, onGroupClicked: (Int, String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(32.dp)
             .padding(8.dp)
+            .clickable { onGroupClicked(group.id, group.name) }
     ) {
         Column {
             Text(group.name)

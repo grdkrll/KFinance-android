@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.NavDest
+import com.grdkrll.kfinance.model.Group
 import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.model.dto.transaction.response.TransactionResponse
+import com.grdkrll.kfinance.repository.GroupRepository
 import com.grdkrll.kfinance.repository.SortRepository
 import com.grdkrll.kfinance.repository.SortType
 import com.grdkrll.kfinance.repository.TransactionRepository
@@ -26,7 +28,8 @@ class HomeViewModel(
     private val navigationDispatcher: NavigationDispatcher,
     private val userRepository: UserRepository,
     private val transactionRepository: TransactionRepository,
-    private val sortRepository: SortRepository
+    private val sortRepository: SortRepository,
+    private val groupRepository: GroupRepository
 ) : ViewModel() {
 
     private val _sortType = MutableStateFlow(SortField(sortRepository.fetchSortType()))
@@ -34,13 +37,17 @@ class HomeViewModel(
 
     val response: MutableState<TransactionState> = mutableStateOf(TransactionState.Empty)
 
-    fun getUser(): User? = userRepository.getUser()
+    fun getUser(): Pair<User, Group>? = userRepository.getUser()
 
     fun redirectToPreLogin() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
             navController.navigate(NavDest.PRE_LOGIN)
         }
+    }
+
+    fun onDeselectGroupButtonClicked() {
+        groupRepository.deselectGroup()
     }
 
     fun redirectToAddTransaction() {
@@ -105,6 +112,7 @@ class HomeViewModel(
                 response.value = TransactionState.Loading
                 response.value = TransactionState.Success(page)
             }
+
             else -> {
             }
         }

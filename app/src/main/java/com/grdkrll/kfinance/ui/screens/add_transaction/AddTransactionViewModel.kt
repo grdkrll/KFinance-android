@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
+import com.grdkrll.kfinance.repository.SelectedGroupRepository
 import com.grdkrll.kfinance.repository.TransactionRepository
+import com.grdkrll.kfinance.repository.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,9 @@ data class CategoryInputField(
 
 class AddTransactionViewModel(
     private val navigationDispatcher: NavigationDispatcher,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val selectedGroupRepository: SelectedGroupRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _type = MutableStateFlow(false)
 
@@ -44,11 +48,14 @@ class AddTransactionViewModel(
 
     fun onAddTransactionButtonClicked() {
         viewModelScope.launch {
+            val userGroup = userRepository.getUser() ?: throw Exception("Something went wrong")
+            val (user, group) = userGroup
             val res = transactionRepository.addTransaction(
                 TransactionRequest(
-                    false,
-                    category.value.category,
-                    sum.value.inputField.toDouble()
+                    type = group.id != -1,
+                    groupId = if(group.id != -1) group.id else user.id,
+                    category = category.value.category,
+                    sum = sum.value.inputField.toDouble()
                 )
             )
             if (res.isSuccess) {

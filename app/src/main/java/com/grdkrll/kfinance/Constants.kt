@@ -45,4 +45,4 @@ enum class TransactionCategory {
     ALL
 }
 
-const val SERVICE_BASE_URL = "http://dry-geckos-work-85-143-112-40.loca.lt"
+const val SERVICE_BASE_URL = "http://yummy-ghosts-look-85-143-112-40.loca.lt"

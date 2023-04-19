@@ -28,7 +28,8 @@ class ProfileScreenViewModel(
     val confirmPassword: StateFlow<InputField> = _confirmPassword
 
     init {
-        val user = userRepository.getUser() ?: throw UserNotAuthenticatedException()
+        val userGroup = userRepository.getUser() ?: throw UserNotAuthenticatedException()
+        val (user, group) = userGroup
         _handle.value = handle.value.copy(inputField = user.handle)
         _email.value = email.value.copy(inputField = user.email)
     }

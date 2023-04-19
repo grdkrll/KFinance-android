@@ -14,7 +14,7 @@ import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.ui.screens.add_group.AddGroupScreen
 import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionScreen
 import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupScreen
-import com.grdkrll.kfinance.ui.screens.groups.GroupsList
+import com.grdkrll.kfinance.ui.screens.groups_list.GroupsList
 import com.grdkrll.kfinance.ui.screens.home.HomeScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel

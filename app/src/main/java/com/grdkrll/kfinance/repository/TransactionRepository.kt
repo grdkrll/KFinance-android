@@ -12,44 +12,45 @@ import io.ktor.client.call.*
 class TransactionRepository(
     private val transactionService: TransactionService,
     private val tokenRepository: TokenRepository,
-    private val database: TransactionDatabase
+    private val database: TransactionDatabase,
+    private val selectedGroupRepository: SelectedGroupRepository
 ) {
     suspend fun getTransactions(page: Int = 0): Result<TransactionPage> {
-        try {
-            val data =
-                transactionService.getAll(tokenRepository.fetchAuthToken()).body<TransactionPage>()
-            data.result.map {
-                database.getTransactionDao().addTransaction(
-                    TransactionEntity(
+            try {
+                val group = selectedGroupRepository.fetchGroup()
+                val data = if(group.id == -1) transactionService.getAllByUser(tokenRepository.fetchAuthToken()).body<TransactionPage>() else transactionService.getAllByGroup(tokenRepository.fetchAuthToken(), group.id).body<TransactionPage>()
+                data.result.map {
+                    database.getTransactionDao().addTransaction(
+                        TransactionEntity(
+                            it.id,
+                            it.type,
+                            it.category.name,
+                            it.sum,
+                            it.timestamp
+                        )
+                    )
+                }
+                return Result.success(data)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return try {
+                val data = database.getTransactionDao().getTransactionsForPage(page).map {
+                    TransactionResponse(
                         it.id,
                         it.type,
-                        it.category.name,
+                        TransactionCategory.valueOf(it.category),
                         it.sum,
                         it.timestamp
                     )
-                )
+                }
+                val totalCount = database.getTransactionDao().getTotalCount()
+                Result.success(TransactionPage(data, totalCount))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Result.failure(e)
             }
-            return Result.success(data)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return try {
-            val data = database.getTransactionDao().getTransactionsForPage(page).map {
-                TransactionResponse(
-                    it.id,
-                    it.type,
-                    TransactionCategory.valueOf(it.category),
-                    it.sum,
-                    it.timestamp
-                )
-            }
-            val totalCount = database.getTransactionDao().getTotalCount()
-            Result.success(TransactionPage(data, totalCount))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
-        }
     }
 
     suspend fun addTransaction(transactionRequest: TransactionRequest): Result<TransactionResponse> {
@@ -67,10 +68,11 @@ class TransactionRepository(
                     res.timestamp
                 )
             )
-            return Result.success(res)
+            Result.success(res)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
         }
+
     }
 }
