@@ -63,4 +63,4 @@ enum class TransactionCategory {
     ALL
 }
 
-const val SERVICE_BASE_URL = "http://slimy-items-write.loca.lt"
+const val SERVICE_BASE_URL = "http://khaki-rice-dream.loca.lt"

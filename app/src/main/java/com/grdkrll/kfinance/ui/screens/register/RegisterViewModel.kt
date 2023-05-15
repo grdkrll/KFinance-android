@@ -92,7 +92,7 @@ class RegisterViewModel(
         )
         val passwordMatch = password.value.inputField == passwordConfirm.value.inputField
         _passwordConfirm.value = passwordConfirm.value.copy(
-            isError = passwordMatch,
+            isError = !passwordMatch,
             errorMessage = "Passwords do not match"
         )
         if (passwordError != null || !passwordMatch || emailError || handleError) {
