@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigator
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.repository.GroupRepository
 import com.grdkrll.kfinance.repository.GroupSettingsRepository

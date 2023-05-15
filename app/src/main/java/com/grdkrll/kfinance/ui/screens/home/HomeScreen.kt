@@ -1,9 +1,6 @@
 package com.grdkrll.kfinance.ui.screens.home
 
 import android.icu.text.DateFormat.getDateInstance
-import android.icu.text.DateFormat.getDateTimeInstance
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -16,21 +13,17 @@ import com.grdkrll.kfinance.sealed.TransactionState
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import com.grdkrll.kfinance.repository.SortType
 import com.grdkrll.kfinance.ui.components.BottomNavigationBar
 import com.grdkrll.kfinance.ui.components.CategoryPicker
 import com.grdkrll.kfinance.ui.components.SimpleCircularProgressIndicator
 import com.grdkrll.kfinance.ui.components.SimpleFloatingActionButton
 import com.grdkrll.kfinance.ui.components.sumColorPicker
 import com.grdkrll.kfinance.ui.components.TopBar
-import com.grdkrll.kfinance.ui.components.buttons.CloseButton
 import kotlinx.coroutines.flow.StateFlow
-import java.time.LocalDate
 import java.util.*
 
 @Composable
@@ -217,7 +210,6 @@ fun TransactionList(
 
 @Composable
 fun TransactionCard(transaction: TransactionResponse) {
-    val formatter = getDateTimeInstance()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -244,76 +236,6 @@ fun TransactionCard(transaction: TransactionResponse) {
             }
             Divider(color = Color.White, thickness = 1.dp)
             Spacer(modifier = Modifier.height(4.dp))
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SortField(
-    sortTypeState: StateFlow<SortField>,
-    onSortTypeChanged: (String) -> Unit
-) {
-    val sortType = sortTypeState.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        TextField(
-            readOnly = true,
-            value = sortType.value.sortType.name,
-            onValueChange = { },
-            label = { Text("SortType") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor()
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }
-        ) {
-            SortType.values().forEach { sortType ->
-                DropdownMenuItem(
-                    text = { Text(sortType.name) },
-                    onClick = {
-                        onSortTypeChanged(sortType.name)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun SelectedGroupCard(
-    name: String,
-    onDeselectGroup: () -> Unit
-) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        shape = MaterialTheme.shapes.extraSmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp)
-            .padding(8.dp)
-    ) {
-        Row {
-            Text(name)
-            Spacer(modifier = Modifier.weight(1f))
-            CloseButton(onDeselectGroup)
         }
     }
 }

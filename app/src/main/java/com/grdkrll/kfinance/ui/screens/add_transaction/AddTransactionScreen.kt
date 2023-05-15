@@ -1,23 +1,16 @@
 package com.grdkrll.kfinance.ui.screens.add_transaction
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.StateFlow
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.ui.components.buttons.CloseButton
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.material.Card
 import com.grdkrll.kfinance.ui.components.CategoryPicker
-import com.grdkrll.kfinance.ui.components.SimpleInputField
 import com.grdkrll.kfinance.ui.components.SimpleInputFieldWithCard
 import com.grdkrll.kfinance.ui.components.buttons.SimpleButton
 
