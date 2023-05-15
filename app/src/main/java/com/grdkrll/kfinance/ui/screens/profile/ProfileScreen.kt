@@ -1,10 +1,11 @@
 package com.grdkrll.kfinance.ui.screens.profile
 
-import EmailInputField
-import PasswordInputField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,14 +14,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.grdkrll.kfinance.ui.components.input_fields.HandleInputField
+import androidx.compose.ui.unit.sp
+import com.grdkrll.kfinance.ui.components.BottomNavigationBar
+import com.grdkrll.kfinance.ui.components.SimpleCircularProgressIndicator
+import com.grdkrll.kfinance.ui.components.SimpleInputField
+import com.grdkrll.kfinance.ui.components.SimpleInputFieldWithCard
+import com.grdkrll.kfinance.ui.components.buttons.SimpleButton
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
@@ -29,109 +41,130 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
+    val userGroup = viewModel.getUser() ?: throw Exception("User not found")
+    val (user, group) = userGroup
+    val scrollState = rememberScrollState()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
-                viewModel::onRedirectToHomeClicked,
-                viewModel::onRedirectToGroupsListClicked,
-                {})
-        }
+                listOf(false, false, true),
+                listOf(
+                    viewModel::onRedirectToHomeClicked,
+                    viewModel::onRedirectToGroupsListClicked,
+                    {})
+            )
+        },
     ) { paddingValues ->
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
+                .verticalScroll(scrollState, true)
         ) {
-            ProfileBox(
-                viewModel.handle,
-                viewModel::onHandleChange,
-                viewModel.email,
-                viewModel::onEmailChange,
-                viewModel.password,
-                viewModel::onPasswordChange,
-                viewModel.confirmPassword,
-                viewModel::onConfirmPasswordChange,
-                viewModel::onConfirmButtonClicked
-            )
+            when (viewModel.loading.value) {
+                false -> {
+                    Column(modifier = Modifier.padding(24.dp)) {
+                        Text(
+                            "Good Morning,",
+                            style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            user.name,
+                            style = TextStyle(
+                                color = Color(217, 203, 79),
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(150.dp))
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        ProfileBox(
+                            viewModel.name,
+                            viewModel::onNameChanged,
+                            viewModel.handle,
+                            viewModel::onHandleChanged,
+                            viewModel.email,
+                            viewModel::onEmailChanged,
+                            viewModel.password,
+                            viewModel::onPasswordChanged
+                        )
+                        SimpleInputFieldWithCard(
+                            text = "Confirm Password",
+                            valueStateFlow = viewModel.confirmPassword,
+                            onValueChanged = viewModel::onConfirmPasswordChanged,
+                            keyboardType = KeyboardType.Password,
+                            passwordType = true
+                        )
+                        SimpleButton(
+                            text = "Confirm Changes",
+                            onClicked = viewModel::onConfirmButtonClicked
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
+                true -> Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SimpleCircularProgressIndicator()
+                }
+
+            }
         }
     }
 }
 
 @Composable
 fun ProfileBox(
-    handleState: StateFlow<InputField>,
+    nameStateFlow: StateFlow<InputField>,
+    onNameChanged: (String) -> Unit,
+    handleStateFlow: StateFlow<InputField>,
     onHandleChanged: (String) -> Unit,
-    emailState: StateFlow<InputField>,
+    emailStateFlow: StateFlow<InputField>,
     onEmailChanged: (String) -> Unit,
-    passwordState: StateFlow<InputField>,
-    onPasswordChange: (String) -> Unit,
-    confirmPasswordState: StateFlow<InputField>,
-    onConfirmPasswordChange: (String) -> Unit,
-    onConfirmButtonClicked: () -> Unit
+    passwordStateFlow: StateFlow<InputField>,
+    onPasswordChanged: (String) -> Unit,
 
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        HandleInputField(handleField = handleState, onHandleChanged = onHandleChanged)
-        EmailInputField(emailField = emailState, onEmailChanged = onEmailChanged)
-        PasswordInputField(passwordField = passwordState, onPasswordChange = onPasswordChange)
-        PasswordInputField(
-            passwordField = confirmPasswordState,
-            onPasswordChange = onConfirmPasswordChange,
-            passwordLabel = "Confirm password"
-        )
-        ConfirmButton(onConfirmButtonClicked)
+    androidx.compose.material3.Card(
+        shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(
+            Color(197, 183, 134)
+        ),
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SimpleInputField(
+                text = "Your Name:",
+                valueStateFlow = nameStateFlow,
+                onValueChanged = onNameChanged
+            )
+            SimpleInputField(
+                text = "Your Email:",
+                valueStateFlow = emailStateFlow,
+                onValueChanged = onEmailChanged,
+                keyboardType = KeyboardType.Email
+            )
+            SimpleInputField(
+                text = "Your Handle:",
+                valueStateFlow = handleStateFlow,
+                onValueChanged = onHandleChanged
+            )
+            SimpleInputField(
+                text = "Change Password:",
+                valueStateFlow = passwordStateFlow,
+                onValueChanged = onPasswordChanged,
+                keyboardType = KeyboardType.Password,
+                passwordType = true
+            )
+        }
     }
-}
 
-@Composable
-fun BottomNavigationBar(
-    redirectToHome: () -> Unit,
-    redirectToGroups: () -> Unit,
-    redirectToProfile: () -> Unit
-) {
-    BottomNavigation(
-        contentColor = MaterialTheme.colorScheme.primary,
-        backgroundColor = MaterialTheme.colorScheme.background
-    ) {
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.Home, "Home") },
-            label = { Text("Home") },
-            alwaysShowLabel = false,
-            selected = false,
-            onClick = redirectToHome
-        )
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.People, "Groups") },
-            label = { Text("Groups") },
-            alwaysShowLabel = false,
-            selected = false,
-            onClick = redirectToGroups
-        )
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.Person, "Profile") },
-            label = { Text("Profile") },
-            alwaysShowLabel = false,
-            selected = true,
-            onClick = redirectToProfile
-        )
-    }
-}
-
-@Composable
-fun ConfirmButton(
-    onConfirmButtonClicked: () -> Unit
-) {
-    OutlinedButton(
-        shape = MaterialTheme.shapes.extraSmall, onClick = onConfirmButtonClicked,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .padding(8.dp)
-    ) {
-        Text("Confirm")
-    }
 }

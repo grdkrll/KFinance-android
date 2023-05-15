@@ -5,20 +5,21 @@ import androidx.room.Room
 import com.grdkrll.kfinance.model.database.GroupsDatabase
 import com.grdkrll.kfinance.model.database.TransactionDatabase
 import com.grdkrll.kfinance.repository.*
-import com.grdkrll.kfinance.service.groups.GroupsService
-import com.grdkrll.kfinance.service.groups.impl.GroupsServiceImpl
-import com.grdkrll.kfinance.service.transaction.TransactionService
-import com.grdkrll.kfinance.service.transaction.impl.TransactionServiceImpl
-import com.grdkrll.kfinance.service.user.UserService
-import com.grdkrll.kfinance.service.user.impl.UserServiceImpl
+import com.grdkrll.kfinance.service.GroupsService
+import com.grdkrll.kfinance.service.impl.GroupsServiceImpl
+import com.grdkrll.kfinance.service.TransactionService
+import com.grdkrll.kfinance.service.impl.TransactionServiceImpl
+import com.grdkrll.kfinance.service.UserService
+import com.grdkrll.kfinance.service.impl.UserServiceImpl
 import com.grdkrll.kfinance.ui.NavigationDispatcher
-import com.grdkrll.kfinance.ui.screens.add_group.AddGroupViewModel
+import com.grdkrll.kfinance.ui.screens.join_group.JoinGroupViewModel
 import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionViewModel
+import com.grdkrll.kfinance.ui.screens.all_transactions.AllTransactionsViewModel
 import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupViewModel
+import com.grdkrll.kfinance.ui.screens.group_settings.GroupSettingsViewModel
 import com.grdkrll.kfinance.ui.screens.groups_list.GroupsListViewModel
 import com.grdkrll.kfinance.ui.screens.home.HomeViewModel
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
-import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginViewModel
 import com.grdkrll.kfinance.ui.screens.profile.ProfileScreenViewModel
 import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
 import io.ktor.client.*
@@ -89,27 +90,31 @@ val loginViewModelModule = module {
     }
 }
 
-val preLoginViewModelModule = module {
-    viewModel { PreLoginViewModel(get()) }
-}
-
 val addTransactionViewModel = module {
     viewModel { AddTransactionViewModel(get(), get(), get(), get()) }
 }
 val groupsListViewModel = module {
-    viewModel { GroupsListViewModel(get(), get(), get()) }
+    viewModel { GroupsListViewModel(get(), get(), get(), get(), get()) }
 }
 
 val profileScreenViewModelModule = module {
     viewModel { ProfileScreenViewModel(get(), get()) }
 }
 
-val addGroupViewModelModule = module {
-    viewModel { AddGroupViewModel(get(), get()) }
+val joinGroupViewModelModule = module {
+    viewModel { JoinGroupViewModel(get(), get()) }
 }
 
 val createGroupViewModelModule = module {
     viewModel { CreateGroupViewModel(get(), get()) }
+}
+
+val allTransactionsViewModelModule = module {
+    viewModel { AllTransactionsViewModel(get(), get()) }
+}
+
+val groupSettingsViewModelModule = module {
+    viewModel { GroupSettingsViewModel(get(), get(), get()) }
 }
 
 val appModule = module {
@@ -119,4 +124,5 @@ val appModule = module {
     single { SortRepository(androidContext()) }
     single { GroupRepository(get(), get(), get(), get()) }
     single { SelectedGroupRepository(androidContext()) }
-} + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + preLoginViewModelModule + homeViewModelModule + addTransactionViewModel + transactionDatabaseModule + groupsListViewModel + profileScreenViewModelModule + addGroupViewModelModule + createGroupViewModelModule + groupsDatabaseModule
+    single { GroupSettingsRepository(androidContext()) }
+} + networkModule + navigationDispatcherModule + registerViewModelModule + loginViewModelModule + homeViewModelModule + addTransactionViewModel + transactionDatabaseModule + groupsListViewModel + profileScreenViewModelModule + joinGroupViewModelModule + createGroupViewModelModule + groupsDatabaseModule + allTransactionsViewModelModule + groupSettingsViewModelModule

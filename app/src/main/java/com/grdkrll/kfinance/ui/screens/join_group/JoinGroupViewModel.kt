@@ -1,5 +1,7 @@
-package com.grdkrll.kfinance.ui.screens.add_group
+package com.grdkrll.kfinance.ui.screens.join_group
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
@@ -10,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AddGroupViewModel(
+class JoinGroupViewModel(
     private val groupRepository: GroupRepository,
     private val navigationDispatcher: NavigationDispatcher
 ) : ViewModel() {
@@ -21,6 +23,8 @@ class AddGroupViewModel(
     private val _password = MutableStateFlow(InputField())
     val password: StateFlow<InputField> = _password
 
+    val loading: MutableState<Boolean> = mutableStateOf(false)
+
     fun onHandleChanged(newHandle: String) {
         _handle.value = handle.value.copy(inputField = newHandle)
     }
@@ -29,8 +33,9 @@ class AddGroupViewModel(
         _password.value = password.value.copy(inputField = newPassword)
     }
 
-    fun onAddGroupButtonClicked() {
+    fun onJoinGroupButtonClicked() {
         viewModelScope.launch {
+            loading.value = true
             val res = groupRepository.addMember(
                 handle = handle.value.inputField,
                 password = password.value.inputField
@@ -41,6 +46,7 @@ class AddGroupViewModel(
                     navController.navigate(NavDest.GROUPS_LIST)
                 }
             }
+            loading.value = false
         }
     }
 

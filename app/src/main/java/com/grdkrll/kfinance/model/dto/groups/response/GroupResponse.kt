@@ -4,5 +4,6 @@ package com.grdkrll.kfinance.model.dto.groups.response
 class GroupResponse(
     val id: Int,
     val name: String,
-    val handle: String
+    val handle: String,
+    val ownerId: Int
 )

@@ -5,42 +5,57 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.grdkrll.kfinance.R
 
 @Composable
 fun GoogleSignInButton(
-    onClick: () -> Unit
+    onClicked: () -> Unit
 ) {
     OutlinedButton(
-        onClick,
+        onClick = onClicked,
+        shape = MaterialTheme.shapes.small,
+        colors = ButtonDefaults.buttonColors(Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(32.dp),
-        shape = MaterialTheme.shapes.extraSmall,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+            .padding(horizontal = 24.dp)
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo_google),
                 contentDescription = "Google Sign-In",
-                contentScale = ContentScale.FillHeight
+                modifier = Modifier.size(24.dp)
             )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     "Google Sign-In",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp
+                    ),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth().align(CenterVertically)
                 )
             }
 

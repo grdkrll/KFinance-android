@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class UserChangeDataRequest(
+    val name: String,
     val handle: String,
     val email: String,
     val password: String,

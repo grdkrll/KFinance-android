@@ -2,9 +2,11 @@ package com.grdkrll.kfinance.model.dto.groups.request
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
-class CreateGroupRequest(
+class ChangeGroupRequest(
     val name: String,
     val handle: String,
-    val password: String
+    val password: String,
+    val confirmPassword: String
 )

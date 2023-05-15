@@ -1,17 +1,14 @@
-package com.grdkrll.kfinance.ui.screens.create_group
+package com.grdkrll.kfinance.ui.screens.join_group
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.grdkrll.kfinance.ui.components.SimpleCircularProgressIndicator
 import com.grdkrll.kfinance.ui.components.SimpleInputField
@@ -21,10 +18,9 @@ import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
-fun CreateGroupScreen(
-    viewModel: CreateGroupViewModel = koinViewModel()
+fun JoinGroupScreen(
+    viewModel: JoinGroupViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -44,18 +40,16 @@ fun CreateGroupScreen(
             when (viewModel.loading.value) {
 
                 false -> {
-                    CreateGroupBox(
-                        nameStateFlow = viewModel.name,
-                        onNameChanged = viewModel::onNameChanged,
+                    AddGroupBox(
                         handleStateFlow = viewModel.handle,
                         onHandleChanged = viewModel::onHandleChanged,
                         passwordStateFlow = viewModel.password,
                         onPasswordChanged = viewModel::onPasswordChanged
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
                     SimpleButton(
-                        text = "Create Group",
-                        onClicked = viewModel::onCreateGroupButtonClicked
+                        text = "Join Group",
+                        onClicked = viewModel::onJoinGroupButtonClicked
                     )
                     Spacer(modifier = Modifier.weight(1.0f))
                     Row(
@@ -63,11 +57,11 @@ fun CreateGroupScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text("Already have a group?")
+                        Text("Want to create a group?")
                         ClickableText(
-                            text = AnnotatedString("Join in"),
+                            text = AnnotatedString("Create"),
                             style = TextStyle(color = Color(217, 203, 79)),
-                            onClick = { viewModel.onJoinGroupButtonClicked() },
+                            onClick = { viewModel.onCreateGroupButtonClicked() },
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
                     }
@@ -80,40 +74,30 @@ fun CreateGroupScreen(
 }
 
 @Composable
-fun CreateGroupBox(
-    nameStateFlow: StateFlow<InputField>,
-    onNameChanged: (String) -> Unit,
+fun AddGroupBox(
     handleStateFlow: StateFlow<InputField>,
     onHandleChanged: (String) -> Unit,
     passwordStateFlow: StateFlow<InputField>,
     onPasswordChanged: (String) -> Unit
 ) {
-    androidx.compose.material3.Card(
+    Card(
         colors = CardDefaults.cardColors(
             Color(197, 183, 134)
-        ),
-        modifier = Modifier.padding(horizontal = 24.dp)
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SimpleInputField(
-                text = "Group's Name:",
-                valueStateFlow = nameStateFlow,
-                onValueChanged = onNameChanged
-            )
-            SimpleInputField(
-                text = "Group's Handle:",
+                text = "Group's Handle",
                 valueStateFlow = handleStateFlow,
                 onValueChanged = onHandleChanged
             )
             SimpleInputField(
                 text = "Group's Password",
                 valueStateFlow = passwordStateFlow,
-                onValueChanged = onPasswordChanged,
-                keyboardType = KeyboardType.Password,
-                passwordType = true
+                onValueChanged = onPasswordChanged
             )
         }
     }

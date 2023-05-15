@@ -14,5 +14,8 @@ data class GroupEntity(
     var name: String,
 
     @ColumnInfo("handle")
-    var handle: String
+    var handle: String,
+
+    @ColumnInfo("ownerId")
+    var ownerId: Int
 )

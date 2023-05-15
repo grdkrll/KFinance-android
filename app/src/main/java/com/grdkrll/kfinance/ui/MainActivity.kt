@@ -11,14 +11,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.grdkrll.kfinance.NavDest
-import com.grdkrll.kfinance.ui.screens.add_group.AddGroupScreen
+import com.grdkrll.kfinance.ui.screens.join_group.JoinGroupScreen
 import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionScreen
+import com.grdkrll.kfinance.ui.screens.all_transactions.AllTransactionsScreen
 import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupScreen
+import com.grdkrll.kfinance.ui.screens.group_settings.GroupSettingsScreen
 import com.grdkrll.kfinance.ui.screens.groups_list.GroupsList
 import com.grdkrll.kfinance.ui.screens.home.HomeScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
-import com.grdkrll.kfinance.ui.screens.pre_login.PreLoginScreen
 import com.grdkrll.kfinance.ui.screens.profile.ProfileScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterScreen
 import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
@@ -60,9 +61,6 @@ fun MainContent(
             composable(NavDest.HOME) {
                 HomeScreen()
             }
-            composable(NavDest.PRE_LOGIN) {
-                PreLoginScreen()
-            }
             composable(NavDest.LOGIN) {
                 val viewModel = koinViewModel<LoginViewModel>()
                 LoginScreen(viewModel)
@@ -80,11 +78,17 @@ fun MainContent(
             composable(NavDest.PROFILE) {
                 ProfileScreen()
             }
-            composable(NavDest.ADD_GROUP) {
-                AddGroupScreen()
+            composable(NavDest.JOIN_GROUP) {
+                JoinGroupScreen()
             }
             composable(NavDest.CREATE_GROUP) {
                 CreateGroupScreen()
+            }
+            composable(NavDest.ALL_TRANSACTIONS) {
+                AllTransactionsScreen()
+            }
+            composable(NavDest.GROUP_SETTINGS) {
+                GroupSettingsScreen()
             }
             navigationDispatcher.navigationEmitter.observe(lifecycleOwner) { navigationCommand ->
                 navigationCommand.invoke(navController)

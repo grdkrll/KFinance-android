@@ -6,8 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 class TransactionResponse(
     val id: Int,
+    val message: String,
     val type: Boolean,
     val category: TransactionCategory,
     val sum: Double,
-    val timestamp: Long
+    val timestamp: String,
+    val ownerHandle: String
 )

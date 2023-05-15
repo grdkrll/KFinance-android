@@ -10,6 +10,9 @@ data class TransactionEntity(
     @ColumnInfo("id")
     var id: Int,
 
+    @ColumnInfo("message")
+    var message: String,
+
     @ColumnInfo("type")
     var type: Boolean,
 
@@ -20,5 +23,8 @@ data class TransactionEntity(
     var sum: Double,
 
     @ColumnInfo("timestamp")
-    var timestamp: Long
+    var timestamp: String,
+
+    @ColumnInfo("ownerHandle")
+    var ownerHandle: String
 )
