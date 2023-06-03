@@ -20,6 +20,9 @@ import com.grdkrll.kfinance.ui.components.buttons.SimpleButton
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * A Composable Function used to display a Screen to Sign Up the User
+ */
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel
@@ -70,6 +73,9 @@ fun RegisterScreen(
     }
 }
 
+/**
+ * A Composable Function Used to hold Input Fields with basic information needed to Sign Up the User
+ */
 @Composable
 fun RegisterBox(
     nameStateFlow: StateFlow<InputField>,

@@ -14,7 +14,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +27,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.grdkrll.kfinance.R
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * A Composable Functions used to display Input Fields
+ *
+ * @param text the text that will be shown above the Input Field
+ * @param valueStateFlow a [StateFlow] instance used to display current text in the Input Field
+ * @param onValueChanged a Function called whenever text inside the Input Field changes (as an argument gets a new string inside the Input Field)
+ * @param keyboardType an instance of [KeyboardType] that will be used for the Input Field (default is set to [KeyboardType.Text])
+ * @param passwordType a [Boolean] value that indicates whether Input Field will work as a Password Input Field or not (default is set to false)
+ *
+ * If [passwordType] is set to true A Icon Button Toggle will appear to switch between showing the password and not (by default the password will not show)
+ */
 @Composable
 fun SimpleInputField(
     text: String,
@@ -83,7 +92,17 @@ fun SimpleInputField(
     }
 }
 
-
+/**
+ * A Simple Input Field with a Card around it
+ *
+ * @param text the text that will be shown above the Input Field
+ * @param valueStateFlow a [StateFlow] instance used to display current text in the Input Field
+ * @param onValueChanged a Function called whenever text inside the Input Field changes (as an argument gets a new string inside the Input Field)
+ * @param keyboardType an instance of [KeyboardType] that will be used for the Input Field (default is set to [KeyboardType.Text])
+ * @param passwordType a [Boolean] value that indicates whether Input Field will work as a Password Input Field or not (default is set to false)
+ *
+ * If [passwordType] is set to true A Icon Button Toggle will appear to switch between showing the password and not (by default the password will not show)
+ */
 @Composable
 fun SimpleInputFieldWithCard(
     text: String,

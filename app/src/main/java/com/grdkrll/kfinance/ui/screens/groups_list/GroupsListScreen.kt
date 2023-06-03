@@ -1,11 +1,9 @@
 package com.grdkrll.kfinance.ui.screens.groups_list
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -18,10 +16,6 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.swipeable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
@@ -29,15 +23,12 @@ import com.grdkrll.kfinance.ui.components.BottomNavigationBar
 import com.grdkrll.kfinance.ui.components.SimpleCircularProgressIndicator
 import com.grdkrll.kfinance.ui.components.SimpleFloatingActionButton
 import com.grdkrll.kfinance.ui.components.TopBar
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.input.pointer.consumeAllChanges
-import androidx.compose.ui.input.pointer.pointerInput
-import kotlin.math.abs
 
-
+/**
+ * A Composable Function used to display a screen with a List of all the Groups of the User
+ */
 @Composable
-fun GroupsList(
+fun GroupsListScreen(
     viewModel: GroupsListViewModel = koinViewModel()
 ) {
     val userGroup = viewModel.getUser() ?: throw Exception()
@@ -63,26 +54,27 @@ fun GroupsList(
                 response = viewModel.response,
                 viewModel::onSelectGroupClicked,
                 user.id,
-                viewModel::redirectToGroupSettings,
-                viewModel::leaveGroup
+                viewModel::redirectToGroupSettings
             )
         }
     }
 }
 
+/**
+ * A Composable Function used to display a List of all the Groups of the User
+ */
 @Composable
 fun GroupsListList(
     response: MutableState<GroupsState>,
     onSelectGroupClicked: (Int, String) -> Unit,
     userId: Int,
-    redirectToGroupSettings: (String, String) -> Unit,
-    leaveGroup: (String) -> Unit
+    redirectToGroupSettings: (String, String) -> Unit
 ) {
     when (val result = response.value) {
         is GroupsState.Success -> {
             LazyColumn {
                 items(result.data) { group ->
-                    GroupCard(group, onSelectGroupClicked, userId, redirectToGroupSettings, leaveGroup)
+                    GroupCard(group, onSelectGroupClicked, userId, redirectToGroupSettings)
                 }
             }
         }
@@ -103,48 +95,22 @@ fun GroupsListList(
     }
 }
 
+/**
+ * A Composable Function used to display a Card with data of a single Group
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GroupCard(
     group: GroupResponse,
     onGroupClicked: (Int, String) -> Unit,
     userId: Int,
-    redirectToGroupSettings: (String, String) -> Unit,
-    leaveGroup: (String) -> Unit
+    redirectToGroupSettings: (String, String) -> Unit
 ) {
-    val swipeableState = rememberSwipeableState(0)
-    var direction by remember { mutableStateOf(-1) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(24.dp)
             .clickable { onGroupClicked(group.id, group.name) }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-
-                        val (x, y) = dragAmount
-                        if (abs(x) > abs(y)) {
-                            when {
-                                x > 0 -> {
-                                    direction = 0
-                                }
-                            }
-                        }
-
-                    },
-                    onDragEnd = {
-                        when (direction) {
-                            0 -> {
-                                leaveGroup(group.handle)
-                            }
-
-                            else -> {}
-                        }
-                    }
-                )
-            }
     ) {
         Column {
             Row {

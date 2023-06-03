@@ -15,6 +15,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * A View Model Class for Regist Screen
+ *
+ * @property name the name currently held inside the Input Field
+ * @property email the email currently held inside the Input Field
+ * @property handle the handle currently held inside the Input Field
+ * @property password the password currently held inside the Input Field
+ * @property passwordConfirm the password currently held inside the Input Field
+ * @property loading indicates that an API call to Sign Up the User is in process
+ */
 class RegisterViewModel(
     private val navigationDispatcher: NavigationDispatcher,
     private val userRepository: UserRepository
@@ -37,10 +47,16 @@ class RegisterViewModel(
 
     val loading: MutableState<Boolean> = mutableStateOf(false)
 
+    /**
+     * Used to change [name] whenever value inside the Input Field changes
+     */
     fun onNameChanged(newName: String) {
         _name.value = name.value.copy(inputField = newName)
     }
 
+    /**
+     * Used to check and change [email] whenever value inside the Input Field changes (if [email] is incorrect, puts an error message into the Input Field)
+     */
     fun onEmailChanged(newEmail: String) {
         _email.value = email.value.copy(
             inputField = newEmail,
@@ -49,6 +65,9 @@ class RegisterViewModel(
         )
     }
 
+    /**
+     * Used to check and change [handle] whenever value inside the Input Field changes (if [handle] is incorrect, puts an error message into the Input Field)
+     */
     fun onHandleChanged(newHandle: String) {
         _handle.value = handle.value.copy(
             inputField = newHandle,
@@ -57,6 +76,9 @@ class RegisterViewModel(
         )
     }
 
+    /**
+     * Used to check and change [password] whenever value inside the Input Field changes (if [password] is incorrect, puts an error message into the Input Field)
+     */
     fun onPasswordChanged(newPassword: String) {
         val error = checkPassword(newPassword)
         _password.value = password.value.copy(
@@ -66,6 +88,9 @@ class RegisterViewModel(
         )
     }
 
+    /**
+     * Used to check and change [passwordConfirm] whenever value inside the Input Field changes (if [passwordConfirm] value is not equal to [password] value, puts an error message into the Input Field)
+     */
     fun onPasswordConfirmChanged(newConfirmPassword: String) {
         _passwordConfirm.value = passwordConfirm.value.copy(
             inputField = newConfirmPassword,
@@ -74,6 +99,9 @@ class RegisterViewModel(
         )
     }
 
+    /**
+     * Used to check that all fields are correct, and if so, makes an API call to the backend to Sign Up the User. If the call is successful redirects to Home Screen, otherwise does nothing
+     */
     fun onRegisterButtonClicked() {
         val passwordError = checkPassword(password.value.inputField)
         _password.value = password.value.copy(
@@ -116,6 +144,9 @@ class RegisterViewModel(
         }
     }
 
+    /**
+     * Used to redirect to Login Screen
+     */
     fun onRedirectToLoginClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()

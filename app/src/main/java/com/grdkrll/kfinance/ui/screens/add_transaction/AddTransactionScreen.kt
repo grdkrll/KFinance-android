@@ -14,6 +14,9 @@ import com.grdkrll.kfinance.ui.components.CategoryPicker
 import com.grdkrll.kfinance.ui.components.SimpleInputFieldWithCard
 import com.grdkrll.kfinance.ui.components.buttons.SimpleButton
 
+/**
+ * A Composable Function used to display a screen to Add a new Transaction
+ */
 @Composable
 fun AddTransactionScreen(
     viewModel: AddTransactionViewModel = koinViewModel()
@@ -51,6 +54,10 @@ fun AddTransactionScreen(
     }
 }
 
+
+/**
+ * A Composable Function used to display Input Fields that hold data for a new Transaction
+ */
 @Composable
 fun TransactionBox(
     messageStateFlow: StateFlow<InputField>,

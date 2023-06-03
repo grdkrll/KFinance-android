@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +18,9 @@ import com.grdkrll.kfinance.model.Group
 import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.ui.components.buttons.CloseButton
 
+/**
+ * A Composable Function used to display the Top Bar of the App
+ */
 @Composable
 fun TopBar(user: User, group: Group, onDeselectGroup: () -> Unit) {
     Card(

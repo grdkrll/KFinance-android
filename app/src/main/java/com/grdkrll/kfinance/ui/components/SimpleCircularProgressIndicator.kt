@@ -7,6 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/**
+ * A Composable Functions used to display Circular Progress Indicator
+ */
 @Composable
 fun SimpleCircularProgressIndicator() {
     return CircularProgressIndicator(

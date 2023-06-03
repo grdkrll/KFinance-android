@@ -33,7 +33,6 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +41,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.grdkrll.kfinance.ui.components.SimpleCircularProgressIndicator
 
+/**
+ * A Composable Function used to display a Screen with Setting for a Group
+ */
 @Composable
 fun GroupSettingsScreen(
     viewModel: GroupSettingsViewModel = koinViewModel()
@@ -86,7 +88,9 @@ fun GroupSettingsScreen(
     }
 }
 
-
+/**
+ * A Composable function used to hold Input Field that hold basic information about the Group
+ */
 @Composable
 fun ChangeGroupBox(
     nameStateFlow: StateFlow<InputField>,
@@ -127,6 +131,9 @@ fun ChangeGroupBox(
     }
 }
 
+/**
+ * A Composable Function used to display a List of Members of the Group
+ */
 @Composable
 fun MembersList(
     response: MutableState<MembersState>,
@@ -162,6 +169,9 @@ fun MembersList(
     }
 }
 
+/**
+ * A Composable Function used to display a Card with data about a single Member of the Group
+ */
 @Composable
 fun MemberCard(member: MemberResponse, onRemoveMemberClicked: (String) -> Unit) {
     Box(

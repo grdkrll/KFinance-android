@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.grdkrll.kfinance.R
 
+/**
+ * A Composable Function used to display a Close Icon Button
+ */
 @Composable
 fun CloseButton(
     onClick: () -> Unit

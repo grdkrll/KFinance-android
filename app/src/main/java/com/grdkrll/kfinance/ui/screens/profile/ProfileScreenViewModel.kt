@@ -9,14 +9,25 @@ import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.checkEmail
 import com.grdkrll.kfinance.checkHandle
 import com.grdkrll.kfinance.checkPassword
+import com.grdkrll.kfinance.model.Group
+import com.grdkrll.kfinance.model.User
 import com.grdkrll.kfinance.repository.UserRepository
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
-import io.ktor.util.reflect.instanceOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * A View Model Class for Profile Screen
+ *
+ * @property name the name currently held inside the Input Field
+ * @property handle the handle currently held inside the Input Field
+ * @property email the email currently held inside the Input Field
+ * @property password the password currently held inside the Input Field
+ * @property confirmPassword the password currently held inside the Input Field
+ * @property loading indicates that an API call to Change User Data is in process
+ */
 class ProfileScreenViewModel(
     private val userRepository: UserRepository,
     private val navigationDispatcher: NavigationDispatcher
@@ -38,29 +49,45 @@ class ProfileScreenViewModel(
 
     val loading: MutableState<Boolean> = mutableStateOf(false)
 
+    /**
+     * Used to put basic information about the User inside the Input Fields
+     */
     init {
         val userGroup = userRepository.getUser() ?: throw UserNotAuthenticatedException()
-        val (user, group) = userGroup
+        val user = userGroup.first
         _name.value = name.value.copy(inputField = user.name)
         _handle.value = handle.value.copy(inputField = user.handle)
         _email.value = email.value.copy(inputField = user.email)
     }
 
+    /**
+     * Used to get data about the User
+     *
+     * @return if the User is not logged in returns null otherwise returns a pair of instances of [User] and [Group]
+     */
     fun getUser() = userRepository.getUser()
 
+    /**
+     * Used to change [name] whenever value inside the Input Field changes
+     */
     fun onNameChanged(newName: String) {
         _name.value = name.value.copy(inputField = newName)
     }
 
+    /**
+     * Used check and change [email] whenever value inside the Input Field changes (if the [email] is incorrect puts an error message into the Input Field)
+     */
     fun onEmailChanged(newEmail: String) {
         _email.value = email.value.copy(
             inputField = newEmail,
             isError = checkEmail(newEmail),
             errorMessage = "Please, enter real email"
         )
-
     }
 
+    /**
+     * Used to check and change [handle] whenever value inside the Input Field changes (if the [handle] is incorrect puts an error message into the Input Field)
+     */
     fun onHandleChanged(newHandle: String) {
         _handle.value = handle.value.copy(
             inputField = newHandle,
@@ -69,7 +96,9 @@ class ProfileScreenViewModel(
         )
     }
 
-
+    /**
+     * Used to check and change [password] whenever value inside the Input Field changes (if the [password] is incorrect puts and error message into the Input Field)
+     */
     fun onPasswordChanged(newPassword: String) {
         val error = checkPassword(newPassword)
         _password.value = password.value.copy(
@@ -79,12 +108,18 @@ class ProfileScreenViewModel(
         )
     }
 
+    /**
+     * Used to change [confirmPassword] whenever value inside the Input Field changes
+     */
     fun onConfirmPasswordChanged(newConfirmPassword: String) {
         _confirmPassword.value = confirmPassword.value.copy(
             inputField = newConfirmPassword
         )
     }
 
+    /**
+     * Used to check that all the fields are correct, and if so makes an API call to the backend to change the User Data. If call is successful redirects to Home Screen, otherwise puts an error message into Input Field
+     */
     fun onConfirmButtonClicked() {
         val passwordError =
             if (password.value.inputField.isEmpty()) null else checkPassword(password.value.inputField)
@@ -104,7 +139,7 @@ class ProfileScreenViewModel(
             errorMessage = "Please, only use letters, numbers and underscores in your handle"
         )
         if (passwordError != null || emailError || handleError) {
-            return;
+            return
         }
         viewModelScope.launch {
             loading.value = true
@@ -116,10 +151,7 @@ class ProfileScreenViewModel(
                 confirmPassword = confirmPassword.value.inputField
             )
             if (res.isSuccess) {
-                navigationDispatcher.dispatchNavigationCommand { navController ->
-                    navController.popBackStack()
-                    navController.navigate(NavDest.HOME)
-                }
+                onRedirectToHomeClicked()
             } else {
                 _confirmPassword.value =
                     confirmPassword.value.copy(isError = true, errorMessage = "Wrong password")
@@ -128,6 +160,9 @@ class ProfileScreenViewModel(
         }
     }
 
+    /**
+     * Used to redirect to Home Screen
+     */
     fun onRedirectToHomeClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
@@ -135,6 +170,9 @@ class ProfileScreenViewModel(
         }
     }
 
+    /**
+     * Used to redirect to Groups List Screen
+     */
     fun onRedirectToGroupsListClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()

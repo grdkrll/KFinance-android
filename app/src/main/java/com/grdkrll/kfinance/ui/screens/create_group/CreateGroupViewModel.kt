@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
-import com.grdkrll.kfinance.checkEmail
 import com.grdkrll.kfinance.checkHandle
 import com.grdkrll.kfinance.checkPassword
 import com.grdkrll.kfinance.repository.GroupRepository
@@ -15,6 +14,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * A View Model Class for Create Group Screen
+ *
+ * @property name the name that is currently held in the Input Field
+ * @property handle the handle that is currently held in the Input Field
+ * @property password the password that is currently held in the Input Field
+ * @property loading indicates that an API call to create a Group is in process
+ */
 class CreateGroupViewModel(
     private val groupRepository: GroupRepository,
     private val navigationDispatcher: NavigationDispatcher
@@ -30,10 +37,16 @@ class CreateGroupViewModel(
 
     val loading: MutableState<Boolean> = mutableStateOf(false)
 
+    /**
+     * Used to change [name] whenever value inside Input Field changes
+     */
     fun onNameChanged(newName: String) {
         _name.value = name.value.copy(inputField = newName)
     }
 
+    /**
+     * Used to check change [handle] whenever value inside Input Field changes. (if the [handle] is not correct puts an error in the Input Field)
+     */
     fun onHandleChanged(newHandle: String) {
         _handle.value = handle.value.copy(
             inputField = newHandle,
@@ -42,6 +55,9 @@ class CreateGroupViewModel(
         )
     }
 
+    /**
+     * Used to change [password] whenever value inside Input Field changes. (if the [password] is not correct puts an error in the Input Field)
+     */
     fun onPasswordChanged(newPassword: String) {
         val error = checkPassword(newPassword)
         _password.value = password.value.copy(
@@ -51,6 +67,9 @@ class CreateGroupViewModel(
         )
     }
 
+    /**
+     * Used check that all fields are correct, and if so makes an API call to the backend to create a new Group
+     */
     fun onCreateGroupButtonClicked() {
         val passwordError = checkPassword(password.value.inputField)
         val handleError = checkHandle(handle.value.inputField)
@@ -74,6 +93,9 @@ class CreateGroupViewModel(
         }
     }
 
+    /**
+     * Used to redirect to Join Group Screen
+     */
     fun onJoinGroupButtonClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
@@ -81,6 +103,9 @@ class CreateGroupViewModel(
         }
     }
 
+    /**
+     * Used to close the Create Group Screen
+     */
     fun onCloseButtonClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()

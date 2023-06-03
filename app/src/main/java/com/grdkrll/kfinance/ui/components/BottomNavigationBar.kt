@@ -7,13 +7,21 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 
+/**
+ * A Composable Function used to Display Bottom Navigation Bar of the App
+ *
+ * @param selectedList A List of [Boolean] values if index i is set to true then Item i will of the Bar will be displayed as selected
+ * @param redirectToFunctions A List of Functions that are called after an Item of the Bar is clicked
+ * @param numberOfItems total number of items in the Bar (default value is set to 3)
+ * @param icons a List of Icons used for the Items of the bar
+ * @param iconsLabels a List of String that indicate what labels will be used for the Items of the Bar
+ */
 @Composable
 fun BottomNavigationBar(
     selectedList: List<Boolean>,

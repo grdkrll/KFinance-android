@@ -1,9 +1,9 @@
 package com.grdkrll.kfinance.service.impl
 
 import com.grdkrll.kfinance.SERVICE_BASE_URL
+import com.grdkrll.kfinance.TimePeriodType
 import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
-import com.grdkrll.kfinance.repository.TimePeriodType
 import com.grdkrll.kfinance.service.TransactionService
 import io.ktor.client.*
 import io.ktor.client.request.*

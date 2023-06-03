@@ -26,6 +26,9 @@ import com.grdkrll.kfinance.ui.components.TopBar
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
+/**
+ * A Composable Function used to display the Home Screen
+ */
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
@@ -73,6 +76,12 @@ fun HomeScreen(
     }
 }
 
+/**
+ * A Composable Function used to display a picker of time periods
+ *
+ * @param numberOfPeriods the total number of available time periods
+ * @param periodsList the List of available time periods
+ */
 @Composable
 fun PeriodPicker(
     numberOfPeriods: Int,
@@ -99,11 +108,16 @@ fun PeriodPicker(
     }
 }
 
+/**
+ * A Composable Function used to display a Card with the total sum of all transactions of the User
+ *
+ * @param periodsList the List of available time periods
+ */
 @Composable
 fun TotalSumCard(
     selectedPeriodStateFlow: StateFlow<TimePeriodField>,
     periodsList: List<String>,
-    periodSumStateFlow: StateFlow<IntField>,
+    periodSumStateFlow: StateFlow<TotalSumField>,
     totalState: MutableState<Boolean>
 ) {
     val date = getDateInstance().format(Date())
@@ -152,6 +166,9 @@ fun TotalSumCard(
     }
 }
 
+/**
+ * A Composable Function used to display a List of Transactions
+ */
 @Composable
 fun TransactionList(
     response: MutableState<TransactionState>,
@@ -208,6 +225,9 @@ fun TransactionList(
     }
 }
 
+/**
+ * A Composable Function used to display a Card with information about a single transaction
+ */
 @Composable
 fun TransactionCard(transaction: TransactionResponse) {
     Box(

@@ -42,6 +42,9 @@ import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.ZoneId
 
+/**
+ * A Composable Function used to display a Screen with all transactions of the User
+ */
 @Composable
 fun AllTransactionsScreen(
     viewModel: AllTransactionsViewModel = koinViewModel()
@@ -73,6 +76,9 @@ fun AllTransactionsScreen(
     }
 }
 
+/**
+ * A Composable Function used to display page indicator
+ */
 @Composable
 fun Pager(
     pagerStateFlow: StateFlow<PagerField>,
@@ -94,6 +100,9 @@ fun Pager(
     }
 }
 
+/**
+ * A Composable Function used to display a List of transactions
+ */
 @Composable
 fun TransactionList(
     response: MutableState<TransactionState>
@@ -150,6 +159,9 @@ fun TransactionList(
     }
 }
 
+/**
+ * A Composable Function used to display a card with an information about a single Transaction
+ */
 @Composable
 fun TransactionCard(transactions: MutableList<TransactionResponse>) {
     Box(

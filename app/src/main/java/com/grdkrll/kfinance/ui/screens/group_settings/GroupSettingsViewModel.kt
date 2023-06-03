@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.checkHandle
 import com.grdkrll.kfinance.checkPassword
+import com.grdkrll.kfinance.model.dto.groups.response.MemberResponse
 import com.grdkrll.kfinance.repository.GroupRepository
 import com.grdkrll.kfinance.repository.GroupSettingsRepository
-import com.grdkrll.kfinance.repository.SelectedGroupRepository
 import com.grdkrll.kfinance.sealed.MembersState
 import com.grdkrll.kfinance.ui.NavigationDispatcher
 import com.grdkrll.kfinance.ui.components.input_fields.InputField
@@ -17,6 +17,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * A View Model Class for Group Setting Screen
+ *
+ * @property response indicates whether the List of Members was fetched or not. Holds the List of [MemberResponse] when it's fetched
+ * @property name the name that is currently held in the Input Field
+ * @property handle the handle that is currently held in the Input Field
+ * @property password the password that is currently held in the Input Field
+ * @property confirmPassword the password that is currently held in the Input Field
+ */
 class GroupSettingsViewModel(
     private val navigationDispatcher: NavigationDispatcher,
     private val settingsRepository: GroupSettingsRepository,
@@ -37,6 +46,9 @@ class GroupSettingsViewModel(
     private val _confirmPassword = MutableStateFlow(InputField())
     val confirmPassword: StateFlow<InputField> = _confirmPassword
 
+    /**
+     * Used to put basic information into Input Fields
+     */
     init {
         val (savedName, savedHandle) = settingsRepository.fetchGroupInfo()
         if (savedName == null || savedHandle == null) {
@@ -47,10 +59,16 @@ class GroupSettingsViewModel(
 
     }
 
+    /**
+     * Used to change [name] whenever value inside the Input Field changes
+     */
     fun onNameChanged(newName: String) {
         _name.value = name.value.copy(inputField = newName)
     }
 
+    /**
+     * Used to change [handle] whenever value inside the Input Field changes (if the handle is incorrect, puts an error message into the Input Field)
+     */
     fun onHandleChanged(newHandle: String) {
         _handle.value = handle.value.copy(
             inputField = newHandle,
@@ -59,6 +77,9 @@ class GroupSettingsViewModel(
         )
     }
 
+    /**
+     * Used to change [password] whenever value inside the Input Field changes (if the password is incorrect, puts an error message into the Input Field)
+     */
     fun onPasswordChanged(newPassword: String) {
         val error = checkPassword(newPassword)
         _password.value = password.value.copy(
@@ -68,10 +89,16 @@ class GroupSettingsViewModel(
         )
     }
 
+    /**
+     * Used to change [confirmPassword] whenever value inside the Input Field changes
+     */
     fun onConfirmPasswordChanged(newConfirmPassword: String) {
         _confirmPassword.value = confirmPassword.value.copy(inputField = newConfirmPassword)
     }
 
+    /**
+     * Used to check that all fields are correct, and if so makes an API call to the backend to change data about the Group (if the [confirmPassword] value is incorrect stays on the Screen and puts an error message into the Input Field, otherwise redirects to Groups List Screen)
+     */
     fun onChangeGroupButtonClicked() {
         val passwordError = if(password.value.inputField.isEmpty()) null else checkPassword(password.value.inputField)
         _password.value = password.value.copy(
@@ -102,6 +129,9 @@ class GroupSettingsViewModel(
         }
     }
 
+    /**
+     * Used to close the Group Settings Screen
+     */
     fun onCloseButtonClicked() {
         settingsRepository.deselectGroup()
         navigationDispatcher.dispatchNavigationCommand { navController ->
@@ -110,6 +140,9 @@ class GroupSettingsViewModel(
         }
     }
 
+    /**
+     * Used to make an API call to the backend to fetch a List of all members of the Group
+     */
     fun fetchMembers() {
         response.value = MembersState.Loading
         viewModelScope.launch {
@@ -123,6 +156,9 @@ class GroupSettingsViewModel(
         }
     }
 
+    /**
+     * Used to make an API call to the backend to remove a member from the Group
+     */
     fun removeMember(userHandle: String) {
         viewModelScope.launch {
             val res = groupRepository.removeMember(

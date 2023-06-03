@@ -19,7 +19,12 @@ import androidx.compose.ui.unit.dp
 import com.grdkrll.kfinance.ui.screens.add_transaction.CategoryInputField
 import kotlinx.coroutines.flow.StateFlow
 
-
+/**
+ * A Composable Function used to display a picker of Categories
+ *
+ * @param categoryStateFlow a [StateFlow] instance used to display currently selected category
+ * @param onCategoryClicked a Function used whenever a category is clicked (as an arguments gets the name of the clicked category)
+ */
 @Composable
 fun CategoryPicker(
     categoryStateFlow: StateFlow<CategoryInputField>,

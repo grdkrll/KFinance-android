@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grdkrll.kfinance.NavDest
 import com.grdkrll.kfinance.TransactionCategory
-import com.grdkrll.kfinance.model.dto.transaction.response.TransactionPage
 import com.grdkrll.kfinance.repository.TransactionRepository
 import com.grdkrll.kfinance.sealed.TransactionState
 import com.grdkrll.kfinance.ui.NavigationDispatcher
@@ -15,10 +14,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * A Data Class that serves as a shell for an integer parameter *page*
+ */
 data class PagerField(
     var page: Int
 )
 
+/**
+ * A ViewModel Class for All Transactions Screen
+ *
+ * @property page the page that is currently displayed on the screen
+ * @property category the category by which the list of transactions is currently filtered
+ * @property response indicates whether transactions were fetched or not. Holds the list of transactions when it's fetched
+ */
 class AllTransactionsViewModel(
     private val navigationDispatcher: NavigationDispatcher,
     private val transactionRepository: TransactionRepository
@@ -32,6 +41,9 @@ class AllTransactionsViewModel(
 
     val response: MutableState<TransactionState> = mutableStateOf(TransactionState.Empty)
 
+    /**
+     * Fetches transactions from the backend or the database
+     */
     fun fetchTransactions() {
         response.value = TransactionState.Loading
         viewModelScope.launch {
@@ -47,6 +59,9 @@ class AllTransactionsViewModel(
         }
     }
 
+    /**
+     * Redirects back to home screen
+     */
     fun onCloseButtonClicked() {
         navigationDispatcher.dispatchNavigationCommand { navController ->
             navController.popBackStack()
@@ -54,12 +69,18 @@ class AllTransactionsViewModel(
         }
     }
 
+    /**
+     * Changes state of [category] field
+     */
     fun onCategoryChanged(newCategory: String) {
         _categoryField.value =
             category.value.copy(category = TransactionCategory.valueOf(newCategory))
         fetchTransactions()
     }
 
+    /**
+     * Increments [page] by 1 and loads a new page of transactions
+     */
     fun incrementPage() {
         when (val result = response.value) {
             is TransactionState.Success -> {
@@ -75,6 +96,9 @@ class AllTransactionsViewModel(
         }
     }
 
+    /**
+     * Decrements [page] by 1 and loads a new page of transactions
+     */
     fun decrementPage() {
         when (val result = response.value) {
             is TransactionState.Success -> {

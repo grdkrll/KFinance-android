@@ -1,3 +1,7 @@
+/**
+ * This file is used for Koin Dependency Injection Framework
+ */
+
 package com.grdkrll.kfinance.di
 
 
@@ -33,6 +37,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
+
 
 val networkModule = module {
     single {
@@ -80,7 +85,7 @@ val registerViewModelModule = module {
 }
 
 val homeViewModelModule = module {
-    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) }
 }
 
 val loginViewModelModule = module {
@@ -121,7 +126,6 @@ val appModule = module {
     single { TokenRepository(androidContext()) }
     single { UserRepository(get(), get(), androidContext(), get()) }
     single { TransactionRepository(get(), get(), get(), get()) }
-    single { SortRepository(androidContext()) }
     single { GroupRepository(get(), get(), get(), get()) }
     single { SelectedGroupRepository(androidContext()) }
     single { GroupSettingsRepository(androidContext()) }

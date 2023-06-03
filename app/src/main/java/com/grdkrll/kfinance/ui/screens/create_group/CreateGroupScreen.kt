@@ -21,7 +21,9 @@ import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 
-
+/**
+ * A Composable Function used to display a screen to Create a new Group
+ */
 @Composable
 fun CreateGroupScreen(
     viewModel: CreateGroupViewModel = koinViewModel()
@@ -79,6 +81,9 @@ fun CreateGroupScreen(
     }
 }
 
+/**
+ * A Composable Function used to Display Input Fields that hold basic information about the Group
+ */
 @Composable
 fun CreateGroupBox(
     nameStateFlow: StateFlow<InputField>,

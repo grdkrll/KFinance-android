@@ -16,7 +16,7 @@ import com.grdkrll.kfinance.ui.screens.add_transaction.AddTransactionScreen
 import com.grdkrll.kfinance.ui.screens.all_transactions.AllTransactionsScreen
 import com.grdkrll.kfinance.ui.screens.create_group.CreateGroupScreen
 import com.grdkrll.kfinance.ui.screens.group_settings.GroupSettingsScreen
-import com.grdkrll.kfinance.ui.screens.groups_list.GroupsList
+import com.grdkrll.kfinance.ui.screens.groups_list.GroupsListScreen
 import com.grdkrll.kfinance.ui.screens.home.HomeScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginScreen
 import com.grdkrll.kfinance.ui.screens.login.LoginViewModel
@@ -26,6 +26,9 @@ import com.grdkrll.kfinance.ui.screens.register.RegisterViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * The Main Activity of the app
+ */
 class MainActivity : ComponentActivity() {
 
     private val navigationDispatcher by inject<NavigationDispatcher>()
@@ -44,6 +47,12 @@ class MainActivity : ComponentActivity() {
 
 }
 
+/**
+ * The main composable function that controls all the navigation in the app
+ *
+ * @param navigationDispatcher an instance of [NavigationDispatcher]
+ * @param lifecycleOwner allows [navigationDispatcher] to work
+ */
 @Composable
 fun MainContent(
     navigationDispatcher: NavigationDispatcher,
@@ -73,7 +82,7 @@ fun MainContent(
                 AddTransactionScreen()
             }
             composable(NavDest.GROUPS_LIST) {
-                GroupsList()
+                GroupsListScreen()
             }
             composable(NavDest.PROFILE) {
                 ProfileScreen()

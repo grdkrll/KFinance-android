@@ -29,12 +29,18 @@ import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A Composable Function used to display a Screen to change the information about the User
+ */
 @Composable
 fun ProfileScreen(
     viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
+
+    // Getting information about user
     val userGroup = viewModel.getUser() ?: throw Exception("User not found")
-    val (user, group) = userGroup
+    val user = userGroup.first
+
     val scrollState = rememberScrollState()
     Scaffold(
         bottomBar = {
@@ -110,6 +116,9 @@ fun ProfileScreen(
     }
 }
 
+/**
+ * A Composable Function used to hold Input Fields with basic information about the User
+ */
 @Composable
 fun ProfileBox(
     nameStateFlow: StateFlow<InputField>,

@@ -1,5 +1,6 @@
 package com.grdkrll.kfinance.repository
 
+import com.grdkrll.kfinance.TimePeriodType
 import com.grdkrll.kfinance.TransactionCategory
 import com.grdkrll.kfinance.model.database.TransactionDatabase
 import com.grdkrll.kfinance.model.dto.transaction.request.TransactionRequest
@@ -9,21 +10,31 @@ import com.grdkrll.kfinance.model.dto.transaction.response.TransactionResponse
 import com.grdkrll.kfinance.model.table.TransactionEntity
 import com.grdkrll.kfinance.service.TransactionService
 import io.ktor.client.call.*
-import java.time.Instant
 
-enum class TimePeriodType {
-    TODAY,
-    THIS_WEEK,
-    THIS_MONTH,
-    ALL
-}
-
+/**
+ * A Repository class used to make calls about Transactions to the local database and the backend
+ *
+ * @param transactionService an instance of [TransactionService]
+ * @param tokenRepository an instance of [TokenRepository]
+ * @param database an instance of [TransactionDatabase]
+ * @param selectedGroupRepository an instance of [SelectedGroupRepository]
+ */
 class TransactionRepository(
     private val transactionService: TransactionService,
     private val tokenRepository: TokenRepository,
     private val database: TransactionDatabase,
     private val selectedGroupRepository: SelectedGroupRepository
 ) {
+    /**
+     * Used to make an API call to the backend or call to the local database to get transactions for the [page]
+     *
+     * @param recent indicates the number of transactions to return. 5 if recent is set to 1, 30 otherwise
+     * @param page the page number for which to return the transactions
+     * @param transactionCategory the category by which to filter the transactions (defaults is set to return all transactions)
+     * @param timePeriod the time period by which to filter the transactions (default is set to return all transactions)
+     *
+     * @return an instance of [Result] that if successful holds an instance of [TransactionPage]
+     */
     suspend fun getTransactions(
         recent: Int,
         page: Int = 1,
@@ -78,6 +89,13 @@ class TransactionRepository(
         }
     }
 
+    /**
+     * Used to make an API call to the backend to add a new Transaction
+     *
+     * @param transactionRequest an instance of [TransactionRequest] that holds data for the new Transaction
+     *
+     * @return an instance of [Result] that if successful holds an instance of [TransactionResponse]
+     */
     suspend fun addTransaction(transactionRequest: TransactionRequest): Result<TransactionResponse> {
         return try {
             val res = transactionService.addTransaction(
@@ -103,14 +121,25 @@ class TransactionRepository(
 
     }
 
+    /**
+     * Used to make an API call to get a total sum of transactions of the User
+     *
+     * @param category the category by which to filter the transactions
+     * @param timePeriod the time period by which to filter the transactions
+     *
+     * @return an instance of [Result] that if successful holds an instance of [TotalResponse]
+     */
     suspend fun getTotal(
-        groupId: Int,
         timePeriod: TimePeriodType,
         category: TransactionCategory
     ): Result<TotalResponse> {
+        val group = selectedGroupRepository.fetchGroup()
         return try {
             val res = transactionService.getTotal(
-                groupId, timePeriod, category, tokenRepository.fetchAuthToken()
+                if (group.id == -1) 0 else group.id,
+                timePeriod,
+                category,
+                tokenRepository.fetchAuthToken()
             ).body<TotalResponse>()
             Result.success(res)
         } catch (e: Exception) {

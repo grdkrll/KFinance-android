@@ -18,6 +18,9 @@ import com.grdkrll.kfinance.ui.components.input_fields.InputField
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A Composable Function used to display a Screen to Join a Group
+ */
 @Composable
 fun JoinGroupScreen(
     viewModel: JoinGroupViewModel = koinViewModel()
@@ -73,6 +76,9 @@ fun JoinGroupScreen(
     }
 }
 
+/**
+ * A Composable Function used to hold Input Fields with basic information needed to Join a Group
+ */
 @Composable
 fun AddGroupBox(
     handleStateFlow: StateFlow<InputField>,
